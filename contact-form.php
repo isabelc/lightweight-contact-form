@@ -8,16 +8,16 @@ Author: Isabel Castillo
 Author URI: http://isabelcastillo.com
 License: GPL2
 */
-$value_name			  = isset($_POST['alcf_contactform_name']) ? htmlentities($_POST['alcf_contactform_name']) : '';
-$value_email		  = isset( $_POST['alcf_contactform_email'] ) ? htmlentities( $_POST['alcf_contactform_email'] ) : '';
+$value_name			= isset($_POST['alcf_contactform_name']) ? htmlentities($_POST['alcf_contactform_name']) : '';
+$value_email		= isset( $_POST['alcf_contactform_email'] ) ? htmlentities( $_POST['alcf_contactform_email'] ) : '';
 $value_response		= isset($_POST['alcf_response']) ? htmlentities($_POST['alcf_response']) : '';
 $value_message		= isset($_POST['alcf_message']) ? htmlentities($_POST['alcf_message']) : '';
 $alcf_strings 		= array(
-	'name' 		      => '<input name="alcf_contactform_name" id="alcf_contactform_name" type="text" class="required" size="33" maxlength="99" value="'. $value_name .'" placeholder="Your name" />',
-	'email'		      => '<input name="alcf_contactform_email" id="alcf_contactform_email" type="text" class="required email" size="33" maxlength="99" value="'. $value_email .'" placeholder="Your email" />',
-	'response' 	    => '<input name="alcf_response" id="alcf_response" type="text" size="33" class="required number" maxlength="99" value="'. $value_response .'" />',
-	'message' 	    => '<textarea name="alcf_message" id="alcf_message" class="required" minlength="4" maxlength="99" cols="33" rows="7" placeholder="Your message">'. $value_message .'</textarea>',
-	'error' 	      => ''
+	'name' 		=> '<input name="alcf_contactform_name" id="alcf_contactform_name" type="text" class="required" size="33" maxlength="99" value="'. $value_name .'" placeholder="Your name" />',
+	'email'		=> '<input name="alcf_contactform_email" id="alcf_contactform_email" type="text" class="required email" size="33" maxlength="99" value="'. $value_email .'" placeholder="Your email" />',
+	'response' 	=> '<input name="alcf_response" id="alcf_response" type="text" size="33" class="required number" maxlength="99" value="'. $value_response .'" />',
+	'message' 	=> '<textarea name="alcf_message" id="alcf_message" class="required" minlength="4" maxlength="99" cols="33" rows="7" placeholder="Your message">'. $value_message .'</textarea>',
+	'error' 	=> ''
 	);
 
 
