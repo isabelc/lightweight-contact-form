@@ -3,7 +3,7 @@
 Plugin Name: Absolute Lightest Contact Form
 Plugin URI: http://isabelcastillo.com/absolute-lightest-contact-form
 Description: Light, barebones Contact Form shortcode.
-Version: 0.8
+Version: 0.8.1
 Author: Isabel Castillo
 Author URI: http://isabelcastillo.com
 License: GPL2
@@ -172,8 +172,6 @@ $message
 Additional Information:
 
 URL:    $form
-Date:   $date
-
 ");
 	$fullmsg = stripslashes(strip_tags(trim($fullmsg)));
 	
