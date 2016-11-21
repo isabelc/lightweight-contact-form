@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Absolute Lightest Contact Form
-Plugin URI: http://isabelcastillo.com/absolute-lightest-contact-form
+Plugin URI: https://isabelcastillo.com/absolute-lightest-contact-form
 Description: Light, barebones Contact Form shortcode.
 Version: 0.9
 Author: Isabel Castillo
-Author URI: http://isabelcastillo.com
+Author URI: https://isabelcastillo.com
 License: GPL2
 */
 $value_name		= isset($_POST['alcf_contactform_name']) ? htmlentities($_POST['alcf_contactform_name']) : '';
