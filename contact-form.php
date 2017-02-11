@@ -189,27 +189,18 @@ Message: ' . $message .'</pre><p class="alcf_reset">[ <a href="'. $form .'">Clic
  */
 function alcf_display_contact_form() {
 	global $alcf_strings;
-
-	$captcha_box = '<fieldset class="alcf-response">
-					<label for="alcf_response"> 1 + 1 = </label>
-					'. $alcf_strings['response'] .'
-				</fieldset>';
+	$captcha_box = '<label for="alcf_response"> 1 + 1 = </label>
+					'. $alcf_strings['response'];
 	$alcf_form = ($alcf_strings['error'] . '
 		<div id="alcf-contactform-wrap">
 			<form action="'. get_permalink() .'" method="post" id="alcf-contactform">
-				<fieldset class="alcf-name">
 					<label for="alcf_contactform_name">Name</label>
 					'. $alcf_strings['name'] .'
-				</fieldset>
-				<fieldset class="alcf-email">
 					<label for="alcf_contactform_email">Email</label>
 					'. $alcf_strings['email'] .'
-				</fieldset>
 					' . $captcha_box . '
-				<fieldset class="alcf-message">
 					<label for="alcf_message">Message</label>
 					'. $alcf_strings['message'] .'
-				</fieldset>
 				<div class="alcf-submit">
 					<input type="submit" name="Submit" id="alcf_contact" value="Send">
 					<input type="hidden" name="alcf_key" value="process">
