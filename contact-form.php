@@ -111,6 +111,7 @@ function lcf_input_filter() {
  * shortcode to display contact form
  */
 function lcf_shortcode() {
+	wp_enqueue_script( 'lcf-validate' );
 	if (lcf_input_filter()) {
 		return lcf_process_contact_form();
 	} else {
@@ -123,11 +124,6 @@ add_shortcode( 'lcf_contact_form', 'lcf_shortcode' );
 */
 function lcf_enqueue_scripts() {
 	wp_register_script('lcf-validate', plugins_url( 'validate.js' , __FILE__ ), array('jquery'), false, true);
-
-	// @todo set Contact page id.
-	if (is_page(122)){
-		wp_enqueue_script('lcf-validate');
-	}
 }
 add_action('wp_enqueue_scripts', 'lcf_enqueue_scripts');
 /**
