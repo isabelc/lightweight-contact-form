@@ -9,7 +9,7 @@ You must edit line 140 of the `contact-form.php` file to change '122' to the pag
 
 Add the contact form to any page with this shortcode:
 
-`[alcf_contact_form]`
+`[lcf_contact_form]`
 
-See the [plugin page](http://isabelcastillo.com/absolute-lightest-contact-form) for details.
+See the [plugin page](https://isabelcastillo.com/absolute-lightest-contact-form) for details.
 

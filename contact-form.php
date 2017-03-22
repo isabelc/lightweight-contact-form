@@ -3,20 +3,20 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/absolute-lightest-contact-form
 Description: Light, barebones Contact Form shortcode.
-Version: 1.1.alpha2
+Version: 1.1.alpha3
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 License: GPL2
 */
-$value_name	= isset($_POST['alcf_contactform_name']) ? esc_attr($_POST['alcf_contactform_name']) : '';
-$value_email = isset( $_POST['alcf_contactform_email'] ) ? esc_attr( $_POST['alcf_contactform_email'] ) : '';
-$value_response	= isset($_POST['alcf_response']) ? esc_attr($_POST['alcf_response']) : '';
-$value_message = isset($_POST['alcf_message']) ? esc_textarea($_POST['alcf_message']) : '';
-$alcf_strings = array(
-	'name' 		=> '<input name="alcf_contactform_name" id="alcf_contactform_name" type="text" class="required" size="33" maxlength="99" value="'. $value_name .'" placeholder="Your name" />',
-	'email'		=> '<input name="alcf_contactform_email" id="alcf_contactform_email" type="text" class="required email" size="33" value="'. $value_email .'" placeholder="Your email" />',
-	'response' 	=> '<input name="alcf_response" id="alcf_response" type="text" size="33" class="required number" maxlength="99" value="'. $value_response .'" />',
-	'message' 	=> '<textarea name="alcf_message" id="alcf_message" class="required" minlength="4" cols="33" rows="7" placeholder="Your message">'. $value_message .'</textarea>',
+$value_name	= isset($_POST['lcf_contactform_name']) ? esc_attr($_POST['lcf_contactform_name']) : '';
+$value_email = isset( $_POST['lcf_contactform_email'] ) ? esc_attr( $_POST['lcf_contactform_email'] ) : '';
+$value_response	= isset($_POST['lcf_response']) ? esc_attr($_POST['lcf_response']) : '';
+$value_message = isset($_POST['lcf_message']) ? esc_textarea($_POST['lcf_message']) : '';
+$lcf_strings = array(
+	'name' 		=> '<input name="lcf_contactform_name" id="lcf_contactform_name" type="text" class="required" size="33" maxlength="99" value="'. $value_name .'" placeholder="Your name" />',
+	'email'		=> '<input name="lcf_contactform_email" id="lcf_contactform_email" type="text" class="required email" size="33" value="'. $value_email .'" placeholder="Your email" />',
+	'response' 	=> '<input name="lcf_response" id="lcf_response" type="text" size="33" class="required number" maxlength="99" value="'. $value_response .'" />',
+	'message' 	=> '<textarea name="lcf_message" id="lcf_message" class="required" minlength="4" cols="33" rows="7" placeholder="Your message">'. $value_message .'</textarea>',
 	'error' 	=> ''
 	);
 
@@ -24,7 +24,7 @@ $alcf_strings = array(
 /**
  * check for malicious input
  */
-function alcf_malicious_input($input) {
+function lcf_malicious_input($input) {
 	$maliciousness = false;
 	$denied_inputs = array("\r", "\n", "mime-version", "content-type", "cc:", "to:");
 	foreach($denied_inputs as $denied_input) {
@@ -38,7 +38,7 @@ function alcf_malicious_input($input) {
 /**
  * check for spam
  */
-function alcf_spam_question($input) {
+function lcf_spam_question($input) {
 	$response = '2';
 	$response = stripslashes(trim($response));
 	return ($input == $response);
@@ -46,50 +46,50 @@ function alcf_spam_question($input) {
 /**
  * filter input
  */
-function alcf_input_filter() {
+function lcf_input_filter() {
 
-	if(!(isset($_POST['alcf_key']))) { 
+	if(!(isset($_POST['lcf_key']))) { 
 		return false;
 	}
-	$_POST['alcf_contactform_name'] = stripslashes(trim($_POST['alcf_contactform_name']));
-	$_POST['alcf_contactform_email'] = stripslashes(trim($_POST['alcf_contactform_email']));
-	$_POST['alcf_message'] = stripslashes(trim($_POST['alcf_message']));
-	$_POST['alcf_response'] = stripslashes(trim($_POST['alcf_response']));
+	$_POST['lcf_contactform_name'] = stripslashes(trim($_POST['lcf_contactform_name']));
+	$_POST['lcf_contactform_email'] = stripslashes(trim($_POST['lcf_contactform_email']));
+	$_POST['lcf_message'] = stripslashes(trim($_POST['lcf_message']));
+	$_POST['lcf_response'] = stripslashes(trim($_POST['lcf_response']));
 
 
-	global $alcf_strings;
+	global $lcf_strings;
 	$pass  = true;
 	
-	if(empty($_POST['alcf_contactform_name'])) {
+	if(empty($_POST['lcf_contactform_name'])) {
 		$pass = FALSE;
 		$fail = 'empty';
-		$alcf_strings['name'] = '<input class="alcf_contactform_error" name="alcf_contactform_name" id="alcf_contactform_name" type="text" size="33" maxlength="99" value="'. esc_attr($_POST['alcf_contactform_name']) .'" placeholder="Your name" />';
+		$lcf_strings['name'] = '<input class="lcf_contactform_error" name="lcf_contactform_name" id="lcf_contactform_name" type="text" size="33" maxlength="99" value="'. esc_attr($_POST['lcf_contactform_name']) .'" placeholder="Your name" />';
 	}
-	if(!is_email($_POST['alcf_contactform_email'])) {
+	if(!is_email($_POST['lcf_contactform_email'])) {
 		$pass = FALSE; 
 		$fail = 'empty';
-		$alcf_strings['email'] = '<input class="alcf_contactform_error" name="alcf_contactform_email" id="alcf_contactform_email" type="text" size="33" value="'. esc_attr($_POST['alcf_contactform_email']) .'" placeholder="Your email" />';
+		$lcf_strings['email'] = '<input class="lcf_contactform_error" name="lcf_contactform_email" id="lcf_contactform_email" type="text" size="33" value="'. esc_attr($_POST['lcf_contactform_email']) .'" placeholder="Your email" />';
 	}
 	
 		
-	if (empty($_POST['alcf_response'])) {
+	if (empty($_POST['lcf_response'])) {
 		$pass = FALSE; 
 		$fail = 'empty';
-		$alcf_strings['response'] = '<input class="alcf_contactform_error" name="alcf_response" id="alcf_response" type="text" size="33" maxlength="99" value="'. esc_attr($_POST['alcf_response']) .'" placeholder="1 + 1 =" />';
+		$lcf_strings['response'] = '<input class="lcf_contactform_error" name="lcf_response" id="lcf_response" type="text" size="33" maxlength="99" value="'. esc_attr($_POST['lcf_response']) .'" placeholder="1 + 1 =" />';
 	}
-	if (!alcf_spam_question($_POST['alcf_response'])) {
+	if (!lcf_spam_question($_POST['lcf_response'])) {
 		$pass = FALSE;
 		$fail = 'wrong';
-		$alcf_strings['response'] = '<input class="alcf_contactform_error" name="alcf_response" id="alcf_response" type="text" size="33" maxlength="99" value="'. esc_attr($_POST['alcf_response']) .'" placeholder="1 + 1 =" />';
+		$lcf_strings['response'] = '<input class="lcf_contactform_error" name="lcf_response" id="lcf_response" type="text" size="33" maxlength="99" value="'. esc_attr($_POST['lcf_response']) .'" placeholder="1 + 1 =" />';
 	}
-	if(empty($_POST['alcf_message'])) {
+	if(empty($_POST['lcf_message'])) {
 		$pass = FALSE; 
 		$fail = 'empty';
-		$alcf_strings['message'] = '<textarea class="alcf_contactform_error" name="alcf_message" id="alcf_message" cols="33" rows="7" placeholder="Your message">'. esc_textarea( $_POST['alcf_message'] ) .'</textarea>';
+		$lcf_strings['message'] = '<textarea class="lcf_contactform_error" name="lcf_message" id="lcf_message" cols="33" rows="7" placeholder="Your message">'. esc_textarea( $_POST['lcf_message'] ) .'</textarea>';
 	}
 	
 		
-	if(alcf_malicious_input($_POST['alcf_contactform_name']) || alcf_malicious_input($_POST['alcf_contactform_email'])) {
+	if(lcf_malicious_input($_POST['lcf_contactform_name']) || lcf_malicious_input($_POST['lcf_contactform_email'])) {
 		$pass = false; 
 		$fail = 'malicious';
 	}
@@ -97,12 +97,12 @@ function alcf_input_filter() {
 		return true;
 	} else {
 		if($fail == 'malicious') {
-			$alcf_strings['error'] = '<p class="alcf-error">Please do not include any of the following in the Name or Email fields: linebreaks, or the phrases "mime-version", "content-type", "cc:" or "to:"</p>';
+			$lcf_strings['error'] = '<p class="lcf-error">Please do not include any of the following in the Name or Email fields: linebreaks, or the phrases "mime-version", "content-type", "cc:" or "to:"</p>';
 		} elseif($fail == 'empty') {
 		
-			$alcf_strings['error'] = '<p class="alcf-error">Please complete the required fields.</p>';
+			$lcf_strings['error'] = '<p class="lcf-error">Please complete the required fields.</p>';
 		} elseif($fail == 'wrong') {
-			$alcf_strings['error'] = '<p class="alcf-error">Oops. Incorrect answer for the security question. Please try again.<br />Hint: 1 + 1 = 2</p>';
+			$lcf_strings['error'] = '<p class="lcf-error">Oops. Incorrect answer for the security question. Please try again.<br />Hint: 1 + 1 = 2</p>';
 		}
 		return false;
 	}
@@ -110,38 +110,37 @@ function alcf_input_filter() {
 /**
  * shortcode to display contact form
  */
-function alcf_shortcode() {
-	if (alcf_input_filter()) {
-		return alcf_process_contact_form();
+function lcf_shortcode() {
+	if (lcf_input_filter()) {
+		return lcf_process_contact_form();
 	} else {
-		return alcf_display_contact_form();
+		return lcf_display_contact_form();
 	}
 }
-add_shortcode('alcf_contact_form','alcf_shortcode');
+add_shortcode( 'lcf_contact_form', 'lcf_shortcode' );
 /**
 * Enqueue validation script
 */
-function alcf_enqueue_scripts() {
-	wp_register_script('alcf-validate', plugins_url( 'validate.js' , __FILE__ ), array('jquery'), false, true);
+function lcf_enqueue_scripts() {
+	wp_register_script('lcf-validate', plugins_url( 'validate.js' , __FILE__ ), array('jquery'), false, true);
 
 	// @todo set Contact page id.
 	if (is_page(122)){
-		wp_enqueue_script('alcf-validate');
+		wp_enqueue_script('lcf-validate');
 	}
 }
-add_action('wp_enqueue_scripts', 'alcf_enqueue_scripts');
+add_action('wp_enqueue_scripts', 'lcf_enqueue_scripts');
 /**
 * process contact form
 */
-function alcf_process_contact_form($content='') {
+function lcf_process_contact_form($content='') {
 	$subject = sprintf( 'Contact form message from %s', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
-	$name = esc_html( $_POST['alcf_contactform_name'] );
-	$email = sanitize_email( $_POST['alcf_contactform_email'] );
+	$name = esc_html( $_POST['lcf_contactform_name'] );
+	$email = sanitize_email( $_POST['lcf_contactform_email'] );
 	$form = esc_url( getenv("HTTP_REFERER") );
 	$date = date_i18n( get_option( 'date_format' ) ) . ' @ ' . date_i18n( get_option( 'time_format' ) );
 	$date = esc_html( $date ); 
-	$headers = "Reply-To: $email\n";
-	$message = esc_html( $_POST['alcf_message'] );
+	$message = esc_html( $_POST['lcf_message'] );
 	$intro = sprintf( 'You are being contacted via %s:', home_url() ); 
 
 $fullmsg = ("Hello,
@@ -162,38 +161,38 @@ URL:    $form
 ");
 	$fullmsg = stripslashes(strip_tags(trim($fullmsg)));
 	
-	wp_mail(get_bloginfo('admin_email'), $subject, $fullmsg, $headers);
+	wp_mail( get_bloginfo('admin_email'), $subject, $fullmsg, "Reply-To: $email\n" );
 
-	$results = ( '<div id="alcf-success"><div class="alcf-success-msg">Your message has been sent.</div>
+	$results = ( '<div id="lcf-success"><div class="lcf-success-msg">Your message has been sent.</div>
 <pre>Name:    ' . $name    . '
 Email:   ' . $email   . '
 Date:    ' . $date . '
-Message: ' . $message .'</pre><p class="alcf_reset">[ <a href="'. $form .'">Click here to reset form</a> ]</p></div>' );
+Message: ' . $message .'</pre><p class="lcf_reset">[ <a href="'. $form .'">Click here to reset form</a> ]</p></div>' );
 	echo $results;
 }
 /**
  * display contact form
  */
-function alcf_display_contact_form() {
-	global $alcf_strings;
-	$captcha_box = '<label for="alcf_response"> 1 + 1 = </label>
-					'. $alcf_strings['response'];
-	$alcf_form = ($alcf_strings['error'] . '
-		<div id="alcf-contactform-wrap">
-			<form action="'. esc_url( get_permalink() ) .'" method="post" id="alcf-contactform">
-					<label for="alcf_contactform_name">Name</label>
-					'. $alcf_strings['name'] .'
-					<label for="alcf_contactform_email">Email</label>
-					'. $alcf_strings['email'] .'
+function lcf_display_contact_form() {
+	global $lcf_strings;
+	$captcha_box = '<label for="lcf_response"> 1 + 1 = </label>
+					'. $lcf_strings['response'];
+	$lcf_form = ($lcf_strings['error'] . '
+		<div id="lcf-contactform-wrap">
+			<form action="'. esc_url( get_permalink() ) .'" method="post" id="lcf-contactform">
+					<label for="lcf_contactform_name">Name</label>
+					'. $lcf_strings['name'] .'
+					<label for="lcf_contactform_email">Email</label>
+					'. $lcf_strings['email'] .'
 					' . $captcha_box . '
-					<label for="alcf_message">Message</label>
-					'. $alcf_strings['message'] .'
-				<div class="alcf-submit">
-					<input type="submit" name="Submit" id="alcf_contact" value="Send">
-					<input type="hidden" name="alcf_key" value="process">
+					<label for="lcf_message">Message</label>
+					'. $lcf_strings['message'] .'
+				<div class="lcf-submit">
+					<input type="submit" name="Submit" id="lcf_contact" value="Send">
+					<input type="hidden" name="lcf_key" value="process">
 				</div>
 			</form>
 		</div>
 ' );
-	return $alcf_form;
+	return $lcf_form;
 }
