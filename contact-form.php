@@ -145,17 +145,17 @@ add_action('wp_enqueue_scripts', 'alcf_enqueue_scripts');
 * process contact form
 */
 function alcf_process_contact_form($content='') {
-	$subject	= sprintf( 'Contact form message from %s', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
-	$name 		= esc_html( $_POST['alcf_contactform_name'] );
-	$email 		= sanitize_email( $_POST['alcf_contactform_email'] );
-	$offset 	= -4;
-	$form 		= esc_url( getenv("HTTP_REFERER") );
-	$date 		= date("l, F jS, Y @ g:i a", time() + $offset * 60 * 60);
+	$subject = sprintf( 'Contact form message from %s', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+	$name = esc_html( $_POST['alcf_contactform_name'] );
+	$email = sanitize_email( $_POST['alcf_contactform_email'] );
+	$form = esc_url( getenv("HTTP_REFERER") );
+	$date = date_i18n( get_option( 'date_format' ) ) . ' @ ' . date_i18n( get_option( 'time_format' ) );
+	$date = esc_html( $date ); 
 	$headers = "Reply-To: $email\n";
 	$message = esc_html( $_POST['alcf_message'] );
 	$intro = sprintf( 'You are being contacted via %s:', home_url() ); 
 
-$fullmsg   = ("Hello,
+$fullmsg = ("Hello,
 
 $intro
 
