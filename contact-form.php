@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Lightweight Contact Form
-Plugin URI: https://isabelcastillo.com/absolute-lightest-contact-form
+Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode.
-Version: 1.1.alpha3
+Version: 1.1
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 License: GPL2
