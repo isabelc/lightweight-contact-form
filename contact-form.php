@@ -119,17 +119,6 @@ function alcf_shortcode() {
 }
 add_shortcode('alcf_contact_form','alcf_shortcode');
 /**
- * template tag to display contact form
- */
-function alcf_contact_form() {
-	if (alcf_input_filter()) {
-		echo alcf_process_contact_form();
-	} else {
-		echo alcf_display_contact_form();
-	}
-}
-
-/**
 * Enqueue validation script
 */
 function alcf_enqueue_scripts() {
