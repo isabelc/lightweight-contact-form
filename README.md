@@ -1,4 +1,4 @@
-# Absolute Lightest Contact Form
+# Lightweight Contact Form
 This is a light, barebones Contact Form plugin for WordPress. No CSS, no settings, no overhead. The goal is fastest page speed.
 
 **Mandatory Step:**
