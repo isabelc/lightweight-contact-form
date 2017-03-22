@@ -20,9 +20,8 @@ $lcf_strings = array(
 	'error' 	=> ''
 	);
 
-
 /**
- * check for malicious input
+ * Check for malicious input
  */
 function lcf_malicious_input($input) {
 	$maliciousness = false;
@@ -36,7 +35,7 @@ function lcf_malicious_input($input) {
 	return $maliciousness;
 }
 /**
- * check for spam
+ * Block spam
  */
 function lcf_spam_question($input) {
 	$response = '2';
@@ -44,7 +43,7 @@ function lcf_spam_question($input) {
 	return ($input == $response);
 }
 /**
- * filter input
+ * Validate the input
  */
 function lcf_input_filter() {
 
@@ -70,8 +69,6 @@ function lcf_input_filter() {
 		$fail = 'empty';
 		$lcf_strings['email'] = '<input class="lcf_contactform_error" name="lcf_contactform_email" id="lcf_contactform_email" type="text" size="33" value="'. esc_attr($_POST['lcf_contactform_email']) .'" placeholder="Your email" />';
 	}
-	
-		
 	if (empty($_POST['lcf_response'])) {
 		$pass = FALSE; 
 		$fail = 'empty';
@@ -87,8 +84,7 @@ function lcf_input_filter() {
 		$fail = 'empty';
 		$lcf_strings['message'] = '<textarea class="lcf_contactform_error" name="lcf_message" id="lcf_message" cols="33" rows="7" placeholder="Your message">'. esc_textarea( $_POST['lcf_message'] ) .'</textarea>';
 	}
-	
-		
+			
 	if(lcf_malicious_input($_POST['lcf_contactform_name']) || lcf_malicious_input($_POST['lcf_contactform_email'])) {
 		$pass = false; 
 		$fail = 'malicious';
@@ -120,7 +116,7 @@ function lcf_shortcode() {
 }
 add_shortcode( 'lcf_contact_form', 'lcf_shortcode' );
 /**
-* Enqueue validation script
+* Register validation script
 */
 function lcf_enqueue_scripts() {
 	wp_register_script('lcf-validate', plugins_url( 'validate.js' , __FILE__ ), array('jquery'), false, true);
@@ -167,7 +163,7 @@ Message: ' . $message .'</pre><p class="lcf_reset">[ <a href="'. $form .'">Click
 	echo $results;
 }
 /**
- * display contact form
+ * Display contact form
  */
 function lcf_display_contact_form() {
 	global $lcf_strings;
