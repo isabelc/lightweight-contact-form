@@ -3,7 +3,7 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode.
-Version: 1.1
+Version: 1.2
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 License: GPL2
@@ -13,10 +13,10 @@ $value_email = isset( $_POST['lcf_contactform_email'] ) ? esc_attr( $_POST['lcf_
 $value_response	= isset($_POST['lcf_response']) ? esc_attr($_POST['lcf_response']) : '';
 $value_message = isset($_POST['lcf_message']) ? esc_textarea($_POST['lcf_message']) : '';
 $lcf_strings = array(
-	'name' 		=> '<input name="lcf_contactform_name" id="lcf_contactform_name" type="text" class="required" size="33" maxlength="99" value="'. $value_name .'" placeholder="Your name" />',
-	'email'		=> '<input name="lcf_contactform_email" id="lcf_contactform_email" type="text" class="required email" size="33" value="'. $value_email .'" placeholder="Your email" />',
-	'response' 	=> '<input name="lcf_response" id="lcf_response" type="text" size="33" class="required number" maxlength="99" value="'. $value_response .'" />',
-	'message' 	=> '<textarea name="lcf_message" id="lcf_message" class="required" minlength="4" cols="33" rows="7" placeholder="Your message">'. $value_message .'</textarea>',
+	'name' 		=> '<input name="lcf_contactform_name" id="lcf_contactform_name" type="text" size="33" class="required" maxlength="99" value="'. $value_name .'" placeholder="Your name" />',
+	'email'		=> '<input name="lcf_contactform_email" id="lcf_contactform_email" type="text" email" size="33" class="required" value="'. $value_email .'" placeholder="Your email" />',
+	'response' 	=> '<input name="lcf_response" id="lcf_response" type="text" size="33" class="required" number" maxlength="99" value="'. $value_response .'" />',
+	'message' 	=> '<textarea name="lcf_message" id="lcf_message" minlength="4" cols="33" rows="7" placeholder="Your message" class="required">'. $value_message .'</textarea>',
 	'error' 	=> ''
 	);
 
@@ -46,7 +46,6 @@ function lcf_spam_question($input) {
  * Validate the input
  */
 function lcf_input_filter() {
-
 	if(!(isset($_POST['lcf_key']))) { 
 		return false;
 	}
@@ -54,7 +53,6 @@ function lcf_input_filter() {
 	$_POST['lcf_contactform_email'] = stripslashes(trim($_POST['lcf_contactform_email']));
 	$_POST['lcf_message'] = stripslashes(trim($_POST['lcf_message']));
 	$_POST['lcf_response'] = stripslashes(trim($_POST['lcf_response']));
-
 
 	global $lcf_strings;
 	$pass  = true;
@@ -103,27 +101,67 @@ function lcf_input_filter() {
 		return false;
 	}
 }
+
 /**
- * shortcode to display contact form
+ * Add the validation script to the footer on the contact form page.
+ */
+function lcf_form_validation() {
+	?><script type='text/javascript'>
+jQuery(document).ready(function(){
+jQuery('#lcf_contact').click(function(event) {
+	var msg = 'This field is required.';
+	var hasBlank = false;
+	var emailBlank = false;
+	jQuery( '.error' ).hide();// hide previous errors
+	jQuery('#lcf-contactform').find('#lcf_contactform_name, #lcf_contactform_email, #lcf_response, #lcf_message').each(function() {
+		if ( jQuery.trim( jQuery( this ).val() ) == '' ) {
+	        var errorLabel = jQuery( '<label />' );
+			errorLabel.attr( 'for', jQuery(this).attr('name') );
+			errorLabel.addClass( 'error' );
+			errorLabel.text( msg );
+			jQuery( this ).after( errorLabel );
+			hasBlank = true;
+			if ( 'lcf_contactform_email' == jQuery(this).attr('name') ) { // is the Email field blank?
+				emailBlank = true;
+			}
+		}
+    });
+    if ( ! emailBlank ) { // if the Email is entered, validate it
+	    var sEmail = jQuery.trim( jQuery('#lcf_contactform_email').val() );
+	    var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+	    if ( ! filter.test(sEmail) ) { // Bad email, so add an error
+	        var errorLabel = jQuery( '<label />' );
+			errorLabel.attr( 'for', 'lcf_contactform_email' );
+			errorLabel.addClass( 'error' );
+			errorLabel.text( 'Please enter a valid email.' );
+			jQuery( '#lcf_contactform_email' ).after( errorLabel );
+			hasBlank = true;
+	    }
+	}
+    if ( hasBlank ) {
+	    return false;    	
+    }
+});
+});</script>
+<?php 
+}
+
+/**
+ * Shortcode to display contact form
  */
 function lcf_shortcode() {
-	wp_enqueue_script( 'lcf-validate' );
 	if (lcf_input_filter()) {
 		return lcf_process_contact_form();
 	} else {
+		wp_enqueue_script( 'jquery' );
+		add_action( 'wp_footer', 'lcf_form_validation', 9999 );
 		return lcf_display_contact_form();
 	}
 }
 add_shortcode( 'lcf_contact_form', 'lcf_shortcode' );
+
 /**
-* Register validation script
-*/
-function lcf_enqueue_scripts() {
-	wp_register_script('lcf-validate', plugins_url( 'validate.js' , __FILE__ ), array('jquery'), false, true);
-}
-add_action('wp_enqueue_scripts', 'lcf_enqueue_scripts');
-/**
-* process contact form
+* Process contact form
 */
 function lcf_process_contact_form($content='') {
 	$subject = sprintf( 'Contact form message from %s', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
