@@ -3,7 +3,7 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode.
-Version: 1.2
+Version: 1.3.alpha.1
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 License: GPL2
@@ -149,13 +149,17 @@ jQuery('#lcf_contact').click(function(event) {
 /**
  * Shortcode to display contact form
  */
-function lcf_shortcode() {
+function lcf_shortcode( $atts ) {
+	$the_atts = shortcode_atts( array(
+		'message_label'	=> 'Message'
+	), $atts, 'lcf_contact_form' );
+
 	if (lcf_input_filter()) {
 		return lcf_process_contact_form();
 	} else {
 		wp_enqueue_script( 'jquery' );
 		add_action( 'wp_footer', 'lcf_form_validation', 9999 );
-		return lcf_display_contact_form();
+		return lcf_display_contact_form( $the_atts );
 	}
 }
 add_shortcode( 'lcf_contact_form', 'lcf_shortcode' );
@@ -203,7 +207,7 @@ Message: ' . $message .'</pre><p class="lcf_reset">[ <a href="'. $form .'">Click
 /**
  * Display contact form
  */
-function lcf_display_contact_form() {
+function lcf_display_contact_form( $atts ) {
 	global $lcf_strings;
 	$captcha_box = '<label for="lcf_response"> 1 + 1 = </label>
 					'. $lcf_strings['response'];
@@ -215,7 +219,7 @@ function lcf_display_contact_form() {
 					<label for="lcf_contactform_email">Email</label>
 					'. $lcf_strings['email'] .'
 					' . $captcha_box . '
-					<label for="lcf_message">Message</label>
+					<label for="lcf_message">' . esc_html( $atts['message_label'] ) . '</label>
 					'. $lcf_strings['message'] .'
 				<div class="lcf-submit">
 					<input type="submit" name="Submit" id="lcf_contact" value="Send">
