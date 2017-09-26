@@ -3,7 +3,7 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode.
-Version: 1.3.alpha.3
+Version: 1.3.alpha.6
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 License: GPL2
@@ -174,6 +174,7 @@ function lcf_process_contact_form( $atts ) {
 	$form = esc_url( getenv("HTTP_REFERER") );
 	$date = date_i18n( get_option( 'date_format' ) ) . ' @ ' . date_i18n( get_option( 'time_format' ) );
 	$date = esc_html( $date );
+	$filter = apply_filters( 'lcf_additional_field_values', false, $_POST );
 	$message_label = esc_html( $atts['message_label'] );
 	$message = esc_html( $_POST['lcf_message'] );
 	$intro = sprintf( 'You are being contacted via %s:', home_url() ); 
@@ -184,6 +185,7 @@ $intro
 
 Name:      $name
 Email:     $email
+$filter
 ${message_label}:
 
 $message
@@ -202,6 +204,7 @@ URL:    $form
 <pre>Name:    ' . $name    . '
 Email:   ' . $email   . '
 Date:    ' . $date . '
+' . $filter . '
 ' . $message_label . ': ' . $message .'</pre><p class="lcf_reset">[ <a href="'. $form .'">Click here to reset form</a> ]</p></div>' );
 	echo $results;
 }
@@ -210,17 +213,19 @@ Date:    ' . $date . '
  */
 function lcf_display_contact_form( $atts ) {
 	global $lcf_strings;
+	$url = get_permalink();
 	$captcha_box = '<label for="lcf_response"> 1 + 1 = </label>
 					'. $lcf_strings['response'];
-	$lcf_form = ($lcf_strings['error'] . '
+	$lcf_form = ( $lcf_strings['error'] . '
 		<div id="lcf-contactform-wrap">
-			<form action="'. esc_url( get_permalink() ) .'" method="post" id="lcf-contactform">
+			<form action="'. esc_url( $url ) .'" method="post" id="lcf-contactform">
 					<label for="lcf_contactform_name">Name</label>
 					'. $lcf_strings['name'] .'
 					<label for="lcf_contactform_email">Email</label>
-					'. $lcf_strings['email'] .'
-					' . $captcha_box . '
-					<label for="lcf_message">' . esc_html( $atts['message_label'] ) . '</label>
+					'. $lcf_strings['email'] );
+	// filter to allow insertion of more fields.
+	$lcf_form .= apply_filters( 'lcf_form_fields', $captcha_box, $url );
+	$lcf_form .= ( '<label for="lcf_message">' . esc_html( $atts['message_label'] ) . '</label>
 					'. $lcf_strings['message'] .'
 				<div class="lcf-submit">
 					<input type="submit" name="Submit" id="lcf_contact" value="Send">
