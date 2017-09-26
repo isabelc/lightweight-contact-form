@@ -3,7 +3,7 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode.
-Version: 1.3.alpha.7
+Version: 1.3.alpha.8
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 License: GPL2
@@ -14,8 +14,8 @@ $value_response	= isset($_POST['lcf_response']) ? esc_attr($_POST['lcf_response'
 $value_message = isset($_POST['lcf_message']) ? esc_textarea($_POST['lcf_message']) : '';
 $lcf_strings = array(
 	'name' 		=> '<input name="lcf_contactform_name" id="lcf_contactform_name" type="text" size="33" class="required" maxlength="99" value="'. $value_name .'" placeholder="Your name" />',
-	'email'		=> '<input name="lcf_contactform_email" id="lcf_contactform_email" type="text" email" size="33" class="required" value="'. $value_email .'" placeholder="Your email" />',
-	'response' 	=> '<input name="lcf_response" id="lcf_response" type="text" size="33" class="required" number" maxlength="99" value="'. $value_response .'" />',
+	'email'		=> '<input name="lcf_contactform_email" id="lcf_contactform_email" type="text" size="33" class="required" value="'. $value_email .'" placeholder="Your email" />',
+	'response' 	=> '<input name="lcf_response" id="lcf_response" type="text" size="33" class="required" maxlength="99" value="'. $value_response .'" />',
 	'message' 	=> '<textarea name="lcf_message" id="lcf_message" minlength="4" cols="33" rows="7" placeholder="Your message" class="required">'. $value_message .'</textarea>',
 	'error' 	=> ''
 	);
