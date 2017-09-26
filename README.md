@@ -7,5 +7,5 @@ Add the contact form to any page with this shortcode:
 
 `[lcf_contact_form]`
 
-See the [plugin page](https://isabelcastillo.com/lightweight-wordpress-contact-form) for details.
+See the [plugin page](https://isabelcastillo.com/lightweight-wordpress-contact-form) for more details.
 

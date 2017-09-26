@@ -2,8 +2,8 @@
 /*
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
-Description: Light, barebones Contact Form shortcode.
-Version: 1.3.alpha.9
+Description: Light, barebones Contact Form shortcode with client-side and server-side validation.
+Version: 1.3
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 License: GPL2
@@ -43,7 +43,7 @@ function lcf_spam_question($input) {
 	return ($input == $response);
 }
 /**
- * Validate the input
+ * Validate the input, server-side
  */
 function lcf_input_filter() {
 	if(!(isset($_POST['lcf_key']))) { 
