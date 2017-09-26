@@ -3,7 +3,7 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode.
-Version: 1.3.alpha.6
+Version: 1.3.alpha.7
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 License: GPL2
@@ -112,18 +112,19 @@ jQuery('#lcf_contact').click(function(event) {
 	var msg = 'This field is required.';
 	var hasBlank = false;
 	var emailBlank = false;
+	var mathBlank = false;
 	jQuery( '.error' ).hide();// hide previous errors
 	jQuery('#lcf-contactform').find('#lcf_contactform_name, #lcf_contactform_email, #lcf_response, #lcf_message').each(function() {
 		if ( jQuery.trim( jQuery( this ).val() ) == '' ) {
+			var attrName = jQuery(this).attr('name');
 	        var errorLabel = jQuery( '<label />' );
-			errorLabel.attr( 'for', jQuery(this).attr('name') );
+			errorLabel.attr( 'for', attrName );
 			errorLabel.addClass( 'error' );
 			errorLabel.text( msg );
 			jQuery( this ).after( errorLabel );
 			hasBlank = true;
-			if ( 'lcf_contactform_email' == jQuery(this).attr('name') ) { // is the Email field blank?
-				emailBlank = true;
-			}
+			if ( 'lcf_contactform_email' == attrName ) { emailBlank = true; }// is the Email field blank?
+			if ( 'lcf_response' == attrName ) { mathBlank = true; }// is the Math field blank?
 		}
     });
     if ( ! emailBlank ) { // if the Email is entered, validate it
@@ -138,9 +139,18 @@ jQuery('#lcf_contact').click(function(event) {
 			hasBlank = true;
 	    }
 	}
-    if ( hasBlank ) {
-	    return false;    	
-    }
+	if ( ! mathBlank ) { // if the math response is entered, validate it
+		var sMath = jQuery.trim( jQuery('#lcf_response').val() );
+		if ( ! jQuery.isNumeric(sMath) ) { // Not numeric, so add an error
+			var errorLabel = jQuery( '<label />' );
+			errorLabel.attr( 'for', 'lcf_response' );
+			errorLabel.addClass( 'error' );
+			errorLabel.text( 'Please solve the math problem. The answer must be a number.' );
+			jQuery( '#lcf_response' ).after( errorLabel );
+			hasBlank = true;
+		}
+	}
+    if ( hasBlank ) { return false; }
 });
 });</script>
 <?php 
