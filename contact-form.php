@@ -3,7 +3,7 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode.
-Version: 1.3.alpha.8
+Version: 1.3.alpha.9
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 License: GPL2
@@ -187,7 +187,7 @@ function lcf_process_contact_form( $atts ) {
 	$filter = apply_filters( 'lcf_additional_field_values', false, $_POST );
 	$message_label = esc_html( $atts['message_label'] );
 	$message = esc_html( $_POST['lcf_message'] );
-	$intro = sprintf( 'You are being contacted via %s:', home_url() ); 
+	$intro = sprintf( 'You are being contacted via %s :', $form );
 
 $fullmsg = ("Hello,
 
@@ -202,9 +202,6 @@ $message
 
 -----------------------
 
-Additional Information:
-
-URL:    $form
 ");
 	$fullmsg = stripslashes(strip_tags(trim($fullmsg)));
 	
