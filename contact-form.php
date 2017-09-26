@@ -3,7 +3,7 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode.
-Version: 1.3.alpha.1
+Version: 1.3.alpha.3
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 License: GPL2
@@ -155,7 +155,7 @@ function lcf_shortcode( $atts ) {
 	), $atts, 'lcf_contact_form' );
 
 	if (lcf_input_filter()) {
-		return lcf_process_contact_form();
+		return lcf_process_contact_form( $the_atts );
 	} else {
 		wp_enqueue_script( 'jquery' );
 		add_action( 'wp_footer', 'lcf_form_validation', 9999 );
@@ -167,13 +167,14 @@ add_shortcode( 'lcf_contact_form', 'lcf_shortcode' );
 /**
 * Process contact form
 */
-function lcf_process_contact_form($content='') {
+function lcf_process_contact_form( $atts ) {
 	$subject = sprintf( 'Contact form message from %s', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$name = esc_html( $_POST['lcf_contactform_name'] );
 	$email = sanitize_email( $_POST['lcf_contactform_email'] );
 	$form = esc_url( getenv("HTTP_REFERER") );
 	$date = date_i18n( get_option( 'date_format' ) ) . ' @ ' . date_i18n( get_option( 'time_format' ) );
-	$date = esc_html( $date ); 
+	$date = esc_html( $date );
+	$message_label = esc_html( $atts['message_label'] );
 	$message = esc_html( $_POST['lcf_message'] );
 	$intro = sprintf( 'You are being contacted via %s:', home_url() ); 
 
@@ -183,7 +184,7 @@ $intro
 
 Name:      $name
 Email:     $email
-Message:
+${message_label}:
 
 $message
 
@@ -201,7 +202,7 @@ URL:    $form
 <pre>Name:    ' . $name    . '
 Email:   ' . $email   . '
 Date:    ' . $date . '
-Message: ' . $message .'</pre><p class="lcf_reset">[ <a href="'. $form .'">Click here to reset form</a> ]</p></div>' );
+' . $message_label . ': ' . $message .'</pre><p class="lcf_reset">[ <a href="'. $form .'">Click here to reset form</a> ]</p></div>' );
 	echo $results;
 }
 /**
