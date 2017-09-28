@@ -3,7 +3,7 @@ Contributors: isabel104
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R7BHLMCQ437SS
 Tags: contact form, lightweight contact form, minimal contact form, fast contact form
 Requires at least: 3.8
-Tested up to: 4.9-alpha-41604
+Tested up to: 4.9-alpha-41626
 Stable tag: 1.3
 License: GNU Version 2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html

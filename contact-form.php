@@ -3,7 +3,7 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode with client-side and server-side validation.
-Version: 1.3
+Version: 1.4.alpha.1
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 License: GPL2
@@ -13,10 +13,10 @@ $value_email = isset( $_POST['lcf_contactform_email'] ) ? esc_attr( $_POST['lcf_
 $value_response	= isset($_POST['lcf_response']) ? esc_attr($_POST['lcf_response']) : '';
 $value_message = isset($_POST['lcf_message']) ? esc_textarea($_POST['lcf_message']) : '';
 $lcf_strings = array(
-	'name' 		=> '<input name="lcf_contactform_name" id="lcf_contactform_name" type="text" size="33" class="required" maxlength="99" value="'. $value_name .'" placeholder="Your name" />',
-	'email'		=> '<input name="lcf_contactform_email" id="lcf_contactform_email" type="text" size="33" class="required" value="'. $value_email .'" placeholder="Your email" />',
-	'response' 	=> '<input name="lcf_response" id="lcf_response" type="text" size="33" class="required" maxlength="99" value="'. $value_response .'" />',
-	'message' 	=> '<textarea name="lcf_message" id="lcf_message" minlength="4" cols="33" rows="7" placeholder="Your message" class="required">'. $value_message .'</textarea>',
+	'name' 		=> '<input name="lcf_contactform_name" id="lcf_contactform_name" type="text" size="33" class="required" maxlength="99" value="'. $value_name .'" placeholder="Your name" required />',
+	'email'		=> '<input name="lcf_contactform_email" id="lcf_contactform_email" type="text" size="33" class="required" value="'. $value_email .'" placeholder="Your email" required />',
+	'response' 	=> '<input name="lcf_response" id="lcf_response" type="text" size="33" class="required" maxlength="99" value="'. $value_response .'" required />',
+	'message' 	=> '<textarea name="lcf_message" id="lcf_message" minlength="4" cols="33" rows="7" placeholder="Your message" class="required" required>'. $value_message .'</textarea>',
 	'error' 	=> ''
 	);
 
@@ -106,53 +106,64 @@ function lcf_input_filter() {
  * Add the validation script to the footer on the contact form page.
  */
 function lcf_form_validation() {
-	?><script type='text/javascript'>
-jQuery(document).ready(function(){
-jQuery('#lcf_contact').click(function(event) {
-	var msg = 'This field is required.';
-	var hasBlank = false;
-	var emailBlank = false;
-	var mathBlank = false;
-	jQuery( '.error' ).hide();// hide previous errors
-	jQuery('#lcf-contactform').find('#lcf_contactform_name, #lcf_contactform_email, #lcf_response, #lcf_message').each(function() {
-		if ( jQuery.trim( jQuery( this ).val() ) == '' ) {
-			var attrName = jQuery(this).attr('name');
-	        var errorLabel = jQuery( '<label />' );
-			errorLabel.attr( 'for', attrName );
-			errorLabel.addClass( 'error' );
-			errorLabel.text( msg );
-			jQuery( this ).after( errorLabel );
-			hasBlank = true;
-			if ( 'lcf_contactform_email' == attrName ) { emailBlank = true; }// is the Email field blank?
-			if ( 'lcf_response' == attrName ) { mathBlank = true; }// is the Math field blank?
+	?><script type='text/javascript'>var submitButton = document.getElementById('lcf_contact');
+	submitButton.onclick = function() {
+		var hasBlank = false;
+		var emailBlank = false;
+		var mathBlank = false;
+		
+		// hide previous errors
+		[].forEach.call(document.querySelectorAll('.error'), function (el) {
+		  el.style.display = 'none';
+		});
+
+		// Check for blank fields.
+		var fields = ['lcf_contactform_name', 'lcf_contactform_email', 'lcf_response', 'lcf_message'];
+		var i, l = fields.length;
+		var fieldname;
+		for (i = 0; i < l; i++) {
+			fieldname = fields[i];
+			var el = document.forms['lcf-contactform'][fieldname];
+			if ( el.value.trim() === '' ) {
+				var errorLabel = document.createElement('label');
+				errorLabel.setAttribute('for', fieldname); 
+				errorLabel.className = 'error';
+				errorLabel.innerText = '\u2191 This field is required.';
+				el.parentNode.insertBefore(errorLabel, el.nextSibling);
+				hasBlank = true;
+				if ( 'lcf_contactform_email' == fieldname ) { emailBlank = true; }// is the Email field blank?
+				if ( 'lcf_response' == fieldname ) { mathBlank = true; }// is the Math field blank?
+			}
 		}
-    });
-    if ( ! emailBlank ) { // if the Email is entered, validate it
-	    var sEmail = jQuery.trim( jQuery('#lcf_contactform_email').val() );
-	    var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-	    if ( ! filter.test(sEmail) ) { // Bad email, so add an error
-	        var errorLabel = jQuery( '<label />' );
-			errorLabel.attr( 'for', 'lcf_contactform_email' );
-			errorLabel.addClass( 'error' );
-			errorLabel.text( 'Please enter a valid email.' );
-			jQuery( '#lcf_contactform_email' ).after( errorLabel );
-			hasBlank = true;
-	    }
-	}
-	if ( ! mathBlank ) { // if the math response is entered, validate it
-		var sMath = jQuery.trim( jQuery('#lcf_response').val() );
-		if ( ! jQuery.isNumeric(sMath) ) { // Not numeric, so add an error
-			var errorLabel = jQuery( '<label />' );
-			errorLabel.attr( 'for', 'lcf_response' );
-			errorLabel.addClass( 'error' );
-			errorLabel.text( 'Please solve the math problem. The answer must be a number.' );
-			jQuery( '#lcf_response' ).after( errorLabel );
-			hasBlank = true;
+
+	    if ( ! emailBlank ) { // if Email is entered, validate it
+	    	var eNode = document.forms['lcf-contactform']['lcf_contactform_email'];
+		    var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+		    if ( ! filter.test( eNode.value.trim() ) ) {
+				var errorLabel = document.createElement('label');
+				errorLabel.setAttribute('for', 'lcf_contactform_email'); 
+				errorLabel.className = 'error';
+				errorLabel.innerText = 'Invalid email. Please enter a valid email.';
+				eNode.parentNode.insertBefore(errorLabel, eNode.nextSibling);
+				hasBlank = true;
+		    }
 		}
-	}
-    if ( hasBlank ) { return false; }
-});
-});</script>
+
+		if ( ! mathBlank ) { // if math response is entered, validate it
+			var mathNode = document.forms['lcf-contactform']['lcf_response'];
+			if ( isNaN( parseInt( mathNode.value ) ) ) { // Not numeric, so add an error
+				var errorLabel = document.createElement('label');
+				errorLabel.setAttribute('for', 'lcf_response'); 
+				errorLabel.className = 'error';
+				errorLabel.innerText = 'Please solve the math problem. The answer must be a number.';
+				mathNode.parentNode.insertBefore(errorLabel, mathNode.nextSibling);
+				hasBlank = true;
+			}
+		}
+
+	    if ( hasBlank ) { scroll(0,0);return false; }
+
+	};</script>
 <?php 
 }
 
@@ -167,7 +178,6 @@ function lcf_shortcode( $atts ) {
 	if (lcf_input_filter()) {
 		return lcf_process_contact_form( $the_atts );
 	} else {
-		wp_enqueue_script( 'jquery' );
 		add_action( 'wp_footer', 'lcf_form_validation', 9999 );
 		return lcf_display_contact_form( $the_atts );
 	}
@@ -225,7 +235,7 @@ function lcf_display_contact_form( $atts ) {
 					'. $lcf_strings['response'];
 	$lcf_form = ( $lcf_strings['error'] . '
 		<div id="lcf-contactform-wrap">
-			<form action="'. esc_url( $url ) .'" method="post" id="lcf-contactform">
+			<form action="'. esc_url( $url ) .'" method="post" name="lcf-contactform" id="lcf-contactform">
 					<label for="lcf_contactform_name">Name</label>
 					'. $lcf_strings['name'] .'
 					<label for="lcf_contactform_email">Email</label>
