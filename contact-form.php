@@ -3,7 +3,7 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode with client-side and server-side validation.
-Version: 1.4.1.alpha.2
+Version: 1.4.1.alpha.3
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 Text Domain: lightweight-contact-form
@@ -52,9 +52,13 @@ function lcf_spam_question($input) {
  * Validate the input, server-side
  */
 function lcf_input_filter() {
-	if ( ! ( isset( $_POST['lcf_key'] ) ) ) { 
+	if ( ! ( isset( $_POST['lcf_key'] ) ) ) {
 		return false;
 	}
+	if ( 'process_form' != $_POST['lcf_key'] ) {
+		return false;
+	}
+
 	global $lcf_strings;
 	$pass  = true;
 
@@ -274,7 +278,7 @@ function lcf_display_contact_form( $atts ) {
 				<textarea name="lcf_message" id="lcf_message" minlength="4" cols="33" rows="7" placeholder="' . __( 'Your message', 'lightweight-contact-form' ) . '" class="' . esc_attr( $message_class ) . '" required>'. esc_textarea( $message ) .'</textarea>
 				<div class="lcf-submit">
 					<input type="submit" name="Submit" id="lcf_contact" value="' . __( 'Send', 'lightweight-contact-form' ) . '">
-					<input type="hidden" name="lcf_key" value="process">
+					<input type="hidden" name="lcf_key" value="process_form">
 				</div>
 			</form>
 		</div>' );
