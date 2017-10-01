@@ -3,7 +3,7 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode with client-side and server-side validation.
-Version: 1.4
+Version: 1.4.1.alpha.2
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 Text Domain: lightweight-contact-form
@@ -25,17 +25,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Lightweight Contact Form. If not, see <http://www.gnu.org/licenses/>.
 */
-$value_name	= isset($_POST['lcf_contactform_name']) ? esc_attr($_POST['lcf_contactform_name']) : '';
-$value_email = isset( $_POST['lcf_contactform_email'] ) ? esc_attr( $_POST['lcf_contactform_email'] ) : '';
-$value_response	= isset($_POST['lcf_response']) ? esc_attr($_POST['lcf_response']) : '';
-$value_message = isset($_POST['lcf_message']) ? esc_textarea($_POST['lcf_message']) : '';
-$lcf_strings = array(
-	'name' 		=> '<input name="lcf_contactform_name" id="lcf_contactform_name" type="text" size="33" class="required" maxlength="99" value="'. $value_name .'" placeholder="' . __( 'Your name', 'lightweight-contact-form' ) . '" required />',
-	'email'		=> '<input name="lcf_contactform_email" id="lcf_contactform_email" type="text" size="33" class="required" value="'. $value_email .'" placeholder="' . __( 'Your email', 'lightweight-contact-form' ) . '" required />',
-	'response' 	=> '<input name="lcf_response" id="lcf_response" type="text" size="33" class="required" maxlength="99" value="'. $value_response .'" required />',
-	'message' 	=> '<textarea name="lcf_message" id="lcf_message" minlength="4" cols="33" rows="7" placeholder="' . __( 'Your message', 'lightweight-contact-form' ) . '" class="required" required>'. $value_message .'</textarea>',
-	'error' 	=> ''
-	);
 
 /**
  * Check for malicious input
@@ -63,44 +52,44 @@ function lcf_spam_question($input) {
  * Validate the input, server-side
  */
 function lcf_input_filter() {
-	if(!(isset($_POST['lcf_key']))) { 
+	if ( ! ( isset( $_POST['lcf_key'] ) ) ) { 
 		return false;
 	}
-	$_POST['lcf_contactform_name'] = stripslashes(trim($_POST['lcf_contactform_name']));
-	$_POST['lcf_contactform_email'] = stripslashes(trim($_POST['lcf_contactform_email']));
-	$_POST['lcf_message'] = stripslashes(trim($_POST['lcf_message']));
-	$_POST['lcf_response'] = stripslashes(trim($_POST['lcf_response']));
-
 	global $lcf_strings;
 	$pass  = true;
-	
-	if(empty($_POST['lcf_contactform_name'])) {
-		$pass = FALSE;
+
+	$lcf_strings['value_name'] = isset($_POST['lcf_contactform_name']) ? sanitize_text_field($_POST['lcf_contactform_name']) : '';
+	$lcf_strings['value_email'] = isset( $_POST['lcf_contactform_email'] ) ? sanitize_email( $_POST['lcf_contactform_email'] ) : '';
+	$lcf_strings['value_message'] = isset($_POST['lcf_message']) ? sanitize_textarea_field($_POST['lcf_message']) : '';
+	$lcf_strings['value_response'] = isset($_POST['lcf_response']) ? sanitize_text_field($_POST['lcf_response']) : '';
+
+	if(empty($lcf_strings['value_name'])) {
+		$pass = false;
 		$fail = 'empty';
-		$lcf_strings['name'] = '<input class="lcf_contactform_error" name="lcf_contactform_name" id="lcf_contactform_name" type="text" size="33" maxlength="99" value="'. esc_attr($_POST['lcf_contactform_name']) .'" placeholder="' . __( 'Your name', 'lightweight-contact-form' ) . '" />';
+		$lcf_strings['name_error'] = true;
 	}
-	if(!is_email($_POST['lcf_contactform_email'])) {
-		$pass = FALSE; 
+	if(!is_email($lcf_strings['value_email'])) {
+		$pass = false; 
 		$fail = 'empty';
-		$lcf_strings['email'] = '<input class="lcf_contactform_error" name="lcf_contactform_email" id="lcf_contactform_email" type="text" size="33" value="'. esc_attr($_POST['lcf_contactform_email']) .'" placeholder="' . __( 'Your email', 'lightweight-contact-form' ) . '" />';
+		$lcf_strings['email_error'] = true;
 	}
-	if (empty($_POST['lcf_response'])) {
-		$pass = FALSE; 
+	if (empty($lcf_strings['value_response'])) {
+		$pass = false; 
 		$fail = 'empty';
-		$lcf_strings['response'] = '<input class="lcf_contactform_error" name="lcf_response" id="lcf_response" type="text" size="33" maxlength="99" value="'. esc_attr($_POST['lcf_response']) .'" placeholder="' . __( '1 + 1 =', 'lightweight-contact-form' ) . '" />';
+		$lcf_strings['response_error'] = true;
 	}
-	if (!lcf_spam_question($_POST['lcf_response'])) {
-		$pass = FALSE;
+	if (!lcf_spam_question($lcf_strings['value_response'])) {
+		$pass = false;
 		$fail = 'wrong';
-		$lcf_strings['response'] = '<input class="lcf_contactform_error" name="lcf_response" id="lcf_response" type="text" size="33" maxlength="99" value="'. esc_attr($_POST['lcf_response']) .'" placeholder="' . __( '1 + 1 =', 'lightweight-contact-form' ) . '" />';
+		$lcf_strings['response_error'] = true;
 	}
-	if(empty($_POST['lcf_message'])) {
-		$pass = FALSE; 
+	if(empty($lcf_strings['value_message'])) {
+		$pass = false; 
 		$fail = 'empty';
-		$lcf_strings['message'] = '<textarea class="lcf_contactform_error" name="lcf_message" id="lcf_message" cols="33" rows="7" placeholder="' . __( 'Your message', 'lightweight-contact-form' ) . '">'. esc_textarea( $_POST['lcf_message'] ) .'</textarea>';
+		$lcf_strings['message_error'] = true;
 	}
 			
-	if(lcf_malicious_input($_POST['lcf_contactform_name']) || lcf_malicious_input($_POST['lcf_contactform_email'])) {
+	if(lcf_malicious_input($lcf_strings['value_name']) || lcf_malicious_input($lcf_strings['value_email'])) {
 		$pass = false; 
 		$fail = 'malicious';
 	}
@@ -108,12 +97,12 @@ function lcf_input_filter() {
 		return true;
 	} else {
 		if($fail == 'malicious') {
-			$lcf_strings['error'] = '<p class="lcf-error">' . __( 'Please do not include any of the following in the Name or Email fields: linebreaks, or the phrases "mime-version", "content-type", "cc:" or "to:"', 'lightweight-contact-form' ) . '</p>';
+			$lcf_strings['error'] = __( 'Please do not include any of the following in the Name or Email fields: linebreaks, or the phrases "mime-version", "content-type", "cc:" or "to:"', 'lightweight-contact-form' );
 		} elseif($fail == 'empty') {
 		
-			$lcf_strings['error'] = '<p class="lcf-error">' . __( 'Please complete the required fields.', 'lightweight-contact-form' ) . '</p>';
+			$lcf_strings['error'] = __( 'Please complete the required fields.', 'lightweight-contact-form' );
 		} elseif($fail == 'wrong') {
-			$lcf_strings['error'] = '<p class="lcf-error">' . __( 'Oops. Incorrect answer for the security question. Please try again.<br />Hint: 1 + 1 = 2', 'lightweight-contact-form' ) . '</p>';
+			$lcf_strings['error'] = __( 'Oops. Incorrect answer for the security question. Please try again. Hint: 1 + 1 = 2', 'lightweight-contact-form' );
 		}
 		return false;
 	}
@@ -205,17 +194,18 @@ add_shortcode( 'lcf_contact_form', 'lcf_shortcode' );
 * Process contact form
 */
 function lcf_process_contact_form( $atts ) {
+	global $lcf_strings;
 	$subject = sprintf( __( 'Contact form message from %s', 'lightweight-contact-form' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$name_label = __( 'Name:', 'lightweight-contact-form' );
 	$email_label = __( 'Email:', 'lightweight-contact-form' );
-	$name = esc_html( $_POST['lcf_contactform_name'] );
-	$email = sanitize_email( $_POST['lcf_contactform_email'] );
+	$name = isset( $lcf_strings['value_name'] ) ? esc_html( $lcf_strings['value_name'] ) : '';
+	$email = isset( $lcf_strings['value_email'] ) ? sanitize_email( $lcf_strings['value_email'] ) : '';
 	$form = esc_url( getenv("HTTP_REFERER") );
 	$date = date_i18n( get_option( 'date_format' ) ) . ' @ ' . date_i18n( get_option( 'time_format' ) );
 	$date = esc_html( $date );
 	$filter = apply_filters( 'lcf_additional_field_values', false, $_POST );
 	$message_label = esc_html( $atts['message_label'] );
-	$message = esc_html( $_POST['lcf_message'] );
+	$message = isset( $lcf_strings['value_message'] ) ? sanitize_textarea_field( $lcf_strings['value_message'] ) : '';
 	$intro = sprintf( __( 'You are being contacted via %s :', 'lightweight-contact-form' ), $form );
 	$hello_i18n = __( 'Hello,', 'lightweight-contact-form' );
 
@@ -250,26 +240,43 @@ $message
  */
 function lcf_display_contact_form( $atts ) {
 	global $lcf_strings;
+	$lcf_form = '';
 	$url = get_permalink();
-	$captcha_box = '<label for="lcf_response"> ' . __( '1 + 1 =', 'lightweight-contact-form' ) . '</label>'
-		. $lcf_strings['response'];
-	$lcf_form = ( $lcf_strings['error'] . '
-		<div id="lcf-contactform-wrap">
+	// entered values
+	$name = isset( $lcf_strings['value_name'] ) ? sanitize_text_field( $lcf_strings['value_name'] ) : '';
+	$email = isset( $lcf_strings['value_email'] ) ? sanitize_email( $lcf_strings['value_email'] ) : '';
+	$message = isset( $lcf_strings['value_message'] ) ? sanitize_textarea_field( $lcf_strings['value_message'] ) : '';
+	$response = isset( $lcf_strings['value_response'] ) ? sanitize_text_field( $lcf_strings['value_response'] ) : '';
+
+	// set class attributes for fields based on whether there is an error
+	$fields = array( 'name', 'email', 'response', 'message' );
+	foreach ( $fields as $field ) {
+		${"{$field}_class"} = empty( $lcf_strings["{$field}_error"] ) ? 'required' : 'lcf_contactform_error';
+	}
+	
+	$captcha_box = '<label for="lcf_response"> ' . __( '1 + 1 =', 'lightweight-contact-form' )
+				. '</label><input name="lcf_response" id="lcf_response" type="text" size="33" class="' . esc_attr( $response_class ) . '" maxlength="99" value="'. esc_attr( $response ) .'" required />';
+
+	if ( isset( $lcf_strings['error'] ) ) {
+		$lcf_form .= '<p class="lcf-error">' . esc_html( $lcf_strings['error'] ) . '</p>';
+
+	}
+
+	$lcf_form .= '<div id="lcf-contactform-wrap">
 			<form action="'. esc_url( $url ) .'" method="post" name="lcf-contactform" id="lcf-contactform">
-					<label for="lcf_contactform_name">' . __( 'Name', 'lightweight-contact-form' ) . '</label>
-					'. $lcf_strings['name'] .'
-					<label for="lcf_contactform_email">' . __( 'Email', 'lightweight-contact-form' ) .'</label>
-					'. $lcf_strings['email'] );
+				<label for="lcf_contactform_name">' . __( 'Name', 'lightweight-contact-form' ) . '</label>
+				<input name="lcf_contactform_name" id="lcf_contactform_name" type="text" size="33" class="' . esc_attr( $name_class ) . '" maxlength="99" value="'. $name .'" placeholder="' . __( 'Your name', 'lightweight-contact-form' ) . '" required />
+				<label for="lcf_contactform_email">' . __( 'Email', 'lightweight-contact-form' ) .'</label>
+				<input name="lcf_contactform_email" id="lcf_contactform_email" type="text" size="33" class="' . esc_attr( $email_class ) . '" value="'. $email .'" placeholder="' . __( 'Your email', 'lightweight-contact-form' ) . '" required />';
 	// filter to allow insertion of more fields.
 	$lcf_form .= apply_filters( 'lcf_form_fields', $captcha_box, $url );
 	$lcf_form .= ( '<label for="lcf_message">' . esc_html( $atts['message_label'] ) . '</label>
-					'. $lcf_strings['message'] .'
+				<textarea name="lcf_message" id="lcf_message" minlength="4" cols="33" rows="7" placeholder="' . __( 'Your message', 'lightweight-contact-form' ) . '" class="' . esc_attr( $message_class ) . '" required>'. esc_textarea( $message ) .'</textarea>
 				<div class="lcf-submit">
 					<input type="submit" name="Submit" id="lcf_contact" value="' . __( 'Send', 'lightweight-contact-form' ) . '">
 					<input type="hidden" name="lcf_key" value="process">
 				</div>
 			</form>
-		</div>
-' );
+		</div>' );
 	return $lcf_form;
 }
