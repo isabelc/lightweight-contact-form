@@ -3,8 +3,8 @@ Contributors: isabel104
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R7BHLMCQ437SS
 Tags: contact form, lightweight contact form, minimal contact form, fast contact form
 Requires at least: 4.6
-Tested up to: 4.9-alpha-41626
-Stable tag: 1.4
+Tested up to: 4.9-alpha-41659
+Stable tag: 1.4.1
 License: GNU Version 2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,10 @@ None yet.
 1. This is the subscription checkbox that is added beneath your comment form.
 
 == Changelog ==
+
+= 1.4.1, 2017-10-02 =
+* Fixed - Running submission checks outside a function.
+* Fixed - Proper escaping.
 
 = 1.4, 2017-09-28 =
 * New - Internationalize all strings to add support for translations.
