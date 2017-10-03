@@ -1,7 +1,7 @@
 === Lightweight Contact Form ===
 Contributors: isabel104
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R7BHLMCQ437SS
-Tags: contact form, lightweight contact form, minimal contact form, fast contact form
+Tags: contact form, lightweight contact form, light contact form, fast contact form, minimal
 Requires at least: 4.6
 Tested up to: 4.9-alpha-41659
 Stable tag: 1.4.1
@@ -34,12 +34,10 @@ You must add any CSS styling yourself. This is easy and is explained in the [ins
 
 **Install and Activate**
 
-1. Log in to your WordPress dashboard.
-2. Go to "Plugins -> Add New".
-3. Click "Upload Plugin".
-4. Click "Browse” to locate the plugin `.zip` file on your computer.
-5. Click "Install Now".
-6. Click "Activate Plugin".
+1. Install and activate the plugin in your WordPress dashboard by going to Plugins –> Add New. 
+2. Search for "Lightweight Contact Form" to find the plugin.
+3. When you see "Lightweight Contact Form," click "Install Now" to install the plugin.
+4. Click "Activate" to activate the plugin.
 
 **Quick Setup**
 
@@ -49,7 +47,11 @@ Add the contact form to any page with this shortcode:
 
 Optionally, add [these CSS styles](https://isabelcastillo.com/lightweight-wordpress-contact-form#jl-css) to align the form fields.
 
-(In addition, if you need extra fields or different forms for different pages, see the [Advanced: Add Custom Form Fields](https://isabelcastillo.com/lightweight-wordpress-contact-form#jl-advanced) section.)
+That is all. Now you have a lightweight, working contact form on your WordPress site. When someone fills out and submits your contact form, it will be sent to the admin email which is set in your WordPress General Settings.
+
+To try the contact form, visit that page on your site.
+
+(If you need extra fields or different forms for different pages, see the [Advanced: Add Custom Form Fields](https://isabelcastillo.com/lightweight-wordpress-contact-form#jl-advanced) section.)
 
 == Frequently Asked Questions ==
 
@@ -57,7 +59,7 @@ None yet.
 
 == Screenshots ==
 
-1. This is the subscription checkbox that is added beneath your comment form.
+1. This is how the contact form appears using the default WordPress theme.
 
 == Changelog ==
 
