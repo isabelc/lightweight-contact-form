@@ -1,14 +1,14 @@
 === Lightweight Contact Form ===
 Contributors: isabel104
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R7BHLMCQ437SS
-Tags: contact form, lightweight contact form, light contact form, fast contact form, minimal
+Tags: contact form, lightweight contact form, light contact form, fast contact form, minimalistic
 Requires at least: 4.6
-Tested up to: 4.9-alpha-41659
-Stable tag: 1.4.1
+Tested up to: 5.0-alpha-42606
+Stable tag: 1.5
 License: GNU Version 2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The most lightweight Contact Form plugin for WordPress. No CSS, no settings, no overhead. The goal is fastest page speed.
+The most lightweight Contact Form plugin for WordPress. No CSS files, no settings, no overhead. The goal is fastest page speed.
 
 == Description ==
 
@@ -23,8 +23,7 @@ Although this form is lightweight and simple, it blocks SPAM, and has both clien
 - No settings. Emails are sent to the admin email which is set in your WordPress General Settings.
 - Add the contact form to any page with a shortcode.
 - Both JavaScript client-side and PHP server-side validation.
-- No CSS included. This is for the most lightweight footprint.
-- It’s just one file. No extra CSS or JavaScript files.
+- It’s just one file. No extra CSS or JavaScript files. This is for the most lightweight footprint.
 
 You must add any CSS styling yourself. This is easy and is explained in the [installation guide](https://isabelcastillo.com/lightweight-wordpress-contact-form#jl-css).
 
@@ -63,6 +62,9 @@ None yet.
 
 == Changelog ==
 
+= 1.5, 2018-03-07 =
+* New - Removed the math captcha box in favor of better spam-blocking.
+
 = 1.4.1, 2017-10-02 =
 * Fixed - Running submission checks outside a function.
 * Fixed - Proper escaping.
@@ -96,6 +98,9 @@ None yet.
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.5 =
+Removed the math captcha box in favor of better spam-blocking.
 
 = 1.3 =
 New filters allow insertion of custom fields.

@@ -3,14 +3,14 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode with client-side and server-side validation.
-Version: 1.5.alpha.2
+Version: 1.5
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 Text Domain: lightweight-contact-form
 License: GNU GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Copyright 2015-2017 Isabel Castillo
+Copyright 2015-2018 Isabel Castillo
 
 Lightweight Contact Form is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
