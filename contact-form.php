@@ -107,18 +107,18 @@ function lcf_input_filter() {
 function lcf_form_validation() {
 	?><script type='text/javascript'>var honey = ['lcf-hundred-acre-wood-field','lcf-hundred-acre-wood-label'];
 	var len = 2;
-		for (var i = 0; i < len; i++) {
-			document.getElementById(honey[i]).style.position = 'absolute';
-			document.getElementById(honey[i]).style.overflow = 'hidden';
-			document.getElementById(honey[i]).style.clip = 'rect(0px, 0px, 0px, 0px)';
-			document.getElementById(honey[i]).style.height = '1px';
-			document.getElementById(honey[i]).style.width = '1px';
-			document.getElementById(honey[i]).style.margin = '-1px';
-			document.getElementById(honey[i]).style.border = '0 none';
-			document.getElementById(honey[i]).style.padding = '0';
-		}
-		var submitButton = document.getElementById('lcf_contact');
-		submitButton.onclick = function() {
+	for (var i = 0; i < len; i++) {
+		document.getElementById(honey[i]).style.position = 'absolute';
+		document.getElementById(honey[i]).style.overflow = 'hidden';
+		document.getElementById(honey[i]).style.clip = 'rect(0px, 0px, 0px, 0px)';
+		document.getElementById(honey[i]).style.height = '1px';
+		document.getElementById(honey[i]).style.width = '1px';
+		document.getElementById(honey[i]).style.margin = '-1px';
+		document.getElementById(honey[i]).style.border = '0 none';
+		document.getElementById(honey[i]).style.padding = '0';
+	}
+	var submitButton = document.getElementById('lcf_contact');
+	submitButton.onclick = function() {
 		if(document.getElementById('lcf-hundred-acre-wood-field').value) { 
 			return false;
 		}
@@ -126,7 +126,7 @@ function lcf_form_validation() {
 		var emailBlank = false;
 		// hide previous errors
 		[].forEach.call(document.querySelectorAll('.error'), function (el) {
-		  el.style.display = 'none';
+			el.style.display = 'none';
 		});
 
 		// Check for blank fields.
@@ -143,11 +143,11 @@ function lcf_form_validation() {
 				errorLabel.innerText = "\u2191 <?php _e( 'This field is required.', 'lightweight-contact-form' ); ?>";
 				el.parentNode.insertBefore(errorLabel, el.nextSibling);
 				hasBlank = true;
-				if ( 'lcf_contactform_email' == fieldname ) { emailBlank = true; }// is the Email field blank?
+				if ('lcf_contactform_email' == fieldname) {emailBlank = true;}// is the Email field blank?
 			}
 		}
 
-	    if ( ! emailBlank ) { // if Email is entered, validate it
+	    if (!emailBlank) { // if Email is entered, validate it
 	    	var eNode = document.forms['lcf-contactform']['lcf_contactform_email'];
 		    var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 		    if ( ! filter.test( eNode.value.trim() ) ) {
@@ -160,7 +160,7 @@ function lcf_form_validation() {
 		    }
 		}
 
-	    if ( hasBlank ) { scroll(0,0);return false; }
+	    if (hasBlank) {scroll(0,0);return false;}
 
 	};</script>
 <?php 
