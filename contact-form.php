@@ -3,7 +3,7 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode with client-side and server-side validation.
-Version: 1.5.alpha.1
+Version: 1.5.alpha.2
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 Text Domain: lightweight-contact-form
@@ -66,7 +66,6 @@ function lcf_input_filter() {
 	$lcf_strings['value_name'] = isset($_POST['lcf_contactform_name']) ? sanitize_text_field( $_POST['lcf_contactform_name'] ) : '';
 	$lcf_strings['value_email'] = isset( $_POST['lcf_contactform_email'] ) ? sanitize_email( $_POST['lcf_contactform_email'] ) : '';
 	$lcf_strings['value_message'] = isset($_POST['lcf_message']) ? sanitize_textarea_field($_POST['lcf_message']) : '';
-	$lcf_strings['value_response'] = isset($_POST['lcf_response']) ? intval( sanitize_text_field($_POST['lcf_response']) ) : '';
 
 	if(empty($lcf_strings['value_name'])) {
 		$pass = false;
@@ -77,16 +76,6 @@ function lcf_input_filter() {
 		$pass = false; 
 		$fail = 'empty';
 		$lcf_strings['email_error'] = true;
-	}
-	if (empty($lcf_strings['value_response'])) {
-		$pass = false; 
-		$fail = 'empty';
-		$lcf_strings['response_error'] = true;
-	}
-	if (!lcf_spam_question($lcf_strings['value_response'])) {
-		$pass = false;
-		$fail = 'wrong';
-		$lcf_strings['response_error'] = true;
 	}
 	if(empty($lcf_strings['value_message'])) {
 		$pass = false; 
@@ -135,14 +124,13 @@ function lcf_form_validation() {
 		}
 		var hasBlank = false;
 		var emailBlank = false;
-		var mathBlank = false;
 		// hide previous errors
 		[].forEach.call(document.querySelectorAll('.error'), function (el) {
 		  el.style.display = 'none';
 		});
 
 		// Check for blank fields.
-		var fields = ['lcf_contactform_name', 'lcf_contactform_email', 'lcf_response', 'lcf_message'];
+		var fields = ['lcf_contactform_name', 'lcf_contactform_email', 'lcf_message'];
 		var i, l = fields.length;
 		var fieldname;
 		for (i = 0; i < l; i++) {
@@ -156,7 +144,6 @@ function lcf_form_validation() {
 				el.parentNode.insertBefore(errorLabel, el.nextSibling);
 				hasBlank = true;
 				if ( 'lcf_contactform_email' == fieldname ) { emailBlank = true; }// is the Email field blank?
-				if ( 'lcf_response' == fieldname ) { mathBlank = true; }// is the Math field blank?
 			}
 		}
 
@@ -171,18 +158,6 @@ function lcf_form_validation() {
 				eNode.parentNode.insertBefore(errorLabel, eNode.nextSibling);
 				hasBlank = true;
 		    }
-		}
-
-		if ( ! mathBlank ) { // if math response is entered, validate it
-			var mathNode = document.forms['lcf-contactform']['lcf_response'];
-			if ( isNaN( parseInt( mathNode.value ) ) ) { // Not numeric, so add an error
-				var errorLabel = document.createElement('label');
-				errorLabel.setAttribute('for', 'lcf_response'); 
-				errorLabel.className = 'error';
-				errorLabel.innerText = "<?php _e( 'Please solve the math problem. The answer must be a number.', 'lightweight-contact-form' ); ?>";
-				mathNode.parentNode.insertBefore(errorLabel, mathNode.nextSibling);
-				hasBlank = true;
-			}
 		}
 
 	    if ( hasBlank ) { scroll(0,0);return false; }
@@ -261,17 +236,12 @@ function lcf_display_contact_form( $atts ) {
 	$name = isset( $lcf_strings['value_name'] ) ? sanitize_text_field( $lcf_strings['value_name'] ) : '';
 	$email = isset( $lcf_strings['value_email'] ) ? sanitize_email( $lcf_strings['value_email'] ) : '';
 	$message = isset( $lcf_strings['value_message'] ) ? sanitize_textarea_field( $lcf_strings['value_message'] ) : '';
-	$response = isset( $lcf_strings['value_response'] ) ? sanitize_text_field( $lcf_strings['value_response'] ) : '';
-
+	
 	// set class attributes for fields based on whether there is an error
-	$fields = array( 'name', 'email', 'response', 'message' );
+	$fields = array( 'name', 'email', 'message' );
 	foreach ( $fields as $field ) {
 		${"{$field}_class"} = empty( $lcf_strings["{$field}_error"] ) ? 'required' : 'lcf_contactform_error';
 	}
-	
-	$captcha_box = '<label for="lcf_response"> ' . __( '1 + 1 =', 'lightweight-contact-form' )
-				. '</label><input name="lcf_response" id="lcf_response" type="text" size="33" class="' . esc_attr( $response_class ) . '" maxlength="99" value="'. esc_attr( $response ) .'" required />';
-
 	if ( isset( $lcf_strings['error'] ) ) {
 		$lcf_form .= '<p class="lcf-error">' . esc_html( $lcf_strings['error'] ) . '</p>';
 
@@ -287,7 +257,7 @@ function lcf_display_contact_form( $atts ) {
 	// add a honeypot field to block spam
 	$lcf_form .= '<label for="lcf-hundred-acre-wood-field" id="lcf-hundred-acre-wood-label">' . __( 'For Official Use Only', 'lightweight-contact-form' ) . '</label><input name="lcf_hundred_acre_wood_field" type="text" id="lcf-hundred-acre-wood-field" value="" />';
 	// filter to allow insertion of more fields.
-	$lcf_form .= apply_filters( 'lcf_form_fields', $captcha_box, $url );
+	$lcf_form .= apply_filters( 'lcf_form_fields', '', $url );
 	$lcf_form .= ( '<label for="lcf_message">' . esc_html( $atts['message_label'] ) . '</label>
 				<textarea name="lcf_message" id="lcf_message" minlength="4" cols="33" rows="7" placeholder="' . __( 'Your message', 'lightweight-contact-form' ) . '" class="' . esc_attr( $message_class ) . '" required>'. stripslashes( esc_textarea( $message ) ) .'</textarea>
 				<div class="lcf-submit">
