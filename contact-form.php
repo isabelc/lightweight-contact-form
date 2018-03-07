@@ -3,7 +3,7 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode with client-side and server-side validation.
-Version: 1.5
+Version: 1.5.1.beta.1
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 Text Domain: lightweight-contact-form
@@ -136,7 +136,7 @@ function lcf_form_validation() {
 			fieldname = fields[i];
 			var el = document.forms['lcf-contactform'][fieldname];
 			if ( el.value.trim() === '' ) {
-				lcfErrorLabel(el, fieldname, "\u2191 <?php _e( 'This field is required.', 'lightweight-contact-form' ); ?>" )
+				lcfErrorLabel(el, fieldname, "\u2191 <?php _e( 'This field is required.', 'lightweight-contact-form' ); ?>" );
 				hasBlank = true;
 				if ('lcf_contactform_email' == fieldname) {emailBlank = true;}// is the Email field blank?
 			}
@@ -145,7 +145,7 @@ function lcf_form_validation() {
 	    	var eNode = document.forms['lcf-contactform']['lcf_contactform_email'];
 		    var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 		    if ( ! filter.test( eNode.value.trim() ) ) {
-				lcfErrorLabel(eNode, 'lcf_contactform_email', "<?php _e( 'Invalid email. Please enter a valid email.', 'lightweight-contact-form' ); ?>" )
+				lcfErrorLabel(eNode, 'lcf_contactform_email', "<?php _e( 'Invalid email. Please enter a valid email.', 'lightweight-contact-form' ); ?>" );
 				hasBlank = true;
 		    }
 		}
