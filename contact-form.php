@@ -3,7 +3,7 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode with client-side and server-side validation.
-Version: 1.4.1
+Version: 1.5.alpha.1
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 Text Domain: lightweight-contact-form
@@ -50,6 +50,10 @@ function lcf_spam_question($input) {
  * Validate the input, server-side
  */
 function lcf_input_filter() {
+	// Block spam bots by making sure honeypot field is empty
+	if ( ! empty( $_POST['lcf_hundred_acre_wood_field'] ) ) {
+		return false;
+	}
 	if ( ! ( isset( $_POST['lcf_key'] ) ) ) {
 		return false;
 	}
@@ -112,12 +116,26 @@ function lcf_input_filter() {
  * Add the validation script to the footer on the contact form page.
  */
 function lcf_form_validation() {
-	?><script type='text/javascript'>var submitButton = document.getElementById('lcf_contact');
-	submitButton.onclick = function() {
+	?><script type='text/javascript'>var honey = ['lcf-hundred-acre-wood-field','lcf-hundred-acre-wood-label'];
+	var len = 2;
+		for (var i = 0; i < len; i++) {
+			document.getElementById(honey[i]).style.position = 'absolute';
+			document.getElementById(honey[i]).style.overflow = 'hidden';
+			document.getElementById(honey[i]).style.clip = 'rect(0px, 0px, 0px, 0px)';
+			document.getElementById(honey[i]).style.height = '1px';
+			document.getElementById(honey[i]).style.width = '1px';
+			document.getElementById(honey[i]).style.margin = '-1px';
+			document.getElementById(honey[i]).style.border = '0 none';
+			document.getElementById(honey[i]).style.padding = '0';
+		}
+		var submitButton = document.getElementById('lcf_contact');
+		submitButton.onclick = function() {
+		if(document.getElementById('lcf-hundred-acre-wood-field').value) { 
+			return false;
+		}
 		var hasBlank = false;
 		var emailBlank = false;
 		var mathBlank = false;
-		
 		// hide previous errors
 		[].forEach.call(document.querySelectorAll('.error'), function (el) {
 		  el.style.display = 'none';
@@ -266,6 +284,8 @@ function lcf_display_contact_form( $atts ) {
 				stripslashes( esc_attr( $name ) ) .'" placeholder="' . __( 'Your name', 'lightweight-contact-form' ) . '" required />
 				<label for="lcf_contactform_email">' . __( 'Email', 'lightweight-contact-form' ) .'</label>
 				<input name="lcf_contactform_email" id="lcf_contactform_email" type="text" size="33" class="' . esc_attr( $email_class ) . '" value="'. esc_attr( $email ) .'" placeholder="' . __( 'Your email', 'lightweight-contact-form' ) . '" required />';
+	// add a honeypot field to block spam
+	$lcf_form .= '<label for="lcf-hundred-acre-wood-field" id="lcf-hundred-acre-wood-label">' . __( 'For Official Use Only', 'lightweight-contact-form' ) . '</label><input name="lcf_hundred_acre_wood_field" type="text" id="lcf-hundred-acre-wood-field" value="" />';
 	// filter to allow insertion of more fields.
 	$lcf_form .= apply_filters( 'lcf_form_fields', $captcha_box, $url );
 	$lcf_form .= ( '<label for="lcf_message">' . esc_html( $atts['message_label'] ) . '</label>
