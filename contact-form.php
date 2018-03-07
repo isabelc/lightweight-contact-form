@@ -128,7 +128,6 @@ function lcf_form_validation() {
 		[].forEach.call(document.querySelectorAll('.error'), function (el) {
 			el.style.display = 'none';
 		});
-
 		// Check for blank fields.
 		var fields = ['lcf_contactform_name', 'lcf_contactform_email', 'lcf_message'];
 		var i, l = fields.length;
@@ -137,32 +136,28 @@ function lcf_form_validation() {
 			fieldname = fields[i];
 			var el = document.forms['lcf-contactform'][fieldname];
 			if ( el.value.trim() === '' ) {
-				var errorLabel = document.createElement('label');
-				errorLabel.setAttribute('for', fieldname); 
-				errorLabel.className = 'error';
-				errorLabel.innerText = "\u2191 <?php _e( 'This field is required.', 'lightweight-contact-form' ); ?>";
-				el.parentNode.insertBefore(errorLabel, el.nextSibling);
+				lcfErrorLabel(el, fieldname, "\u2191 <?php _e( 'This field is required.', 'lightweight-contact-form' ); ?>" )
 				hasBlank = true;
 				if ('lcf_contactform_email' == fieldname) {emailBlank = true;}// is the Email field blank?
 			}
 		}
-
 	    if (!emailBlank) { // if Email is entered, validate it
 	    	var eNode = document.forms['lcf-contactform']['lcf_contactform_email'];
 		    var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 		    if ( ! filter.test( eNode.value.trim() ) ) {
-				var errorLabel = document.createElement('label');
-				errorLabel.setAttribute('for', 'lcf_contactform_email'); 
-				errorLabel.className = 'error';
-				errorLabel.innerText = "<?php _e( 'Invalid email. Please enter a valid email.', 'lightweight-contact-form' ); ?>";
-				eNode.parentNode.insertBefore(errorLabel, eNode.nextSibling);
+				lcfErrorLabel(eNode, 'lcf_contactform_email', "<?php _e( 'Invalid email. Please enter a valid email.', 'lightweight-contact-form' ); ?>" )
 				hasBlank = true;
 		    }
 		}
-
 	    if (hasBlank) {scroll(0,0);return false;}
-
-	};</script>
+	};
+	function lcfErrorLabel(el, fieldname, text ) {
+		var err = document.createElement('label');
+		err.setAttribute('for', fieldname); 
+		err.className = 'error';
+		err.innerText = text;
+		el.parentNode.insertBefore(err, el.nextSibling);
+	}</script>
 <?php 
 }
 
