@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: contact form, lightweight contact form, light contact form, fast contact form, minimalistic
 Requires at least: 4.6
 Tested up to: 5.0-alpha-42606
-Stable tag: 1.5
+Stable tag: 1.5.1
 License: GNU Version 2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,9 @@ None yet.
 1. This is how the contact form appears using the default WordPress theme.
 
 == Changelog ==
+
+= 1.5.1, 2018-03-07 =
+* Tweak - Added 2 (optional) semi-colons.
 
 = 1.5, 2018-03-07 =
 * New - Removed the math captcha box in favor of better spam-blocking.
