@@ -255,7 +255,7 @@ function lcf_display_contact_form( $atts ) {
 				<label for="lcf_contactform_email">' . __( 'Email', 'lightweight-contact-form' ) .'</label>
 				<input name="lcf_contactform_email" id="lcf_contactform_email" type="text" size="33" class="' . esc_attr( $email_class ) . '" value="'. esc_attr( $email ) .'" placeholder="' . __( 'Your email', 'lightweight-contact-form' ) . '" required />';
 	// add a honeypot field to block spam
-	$lcf_form .= '<label for="lcf-hundred-acre-wood-field" id="lcf-hundred-acre-wood-label">' . __( 'For Official Use Only', 'lightweight-contact-form' ) . '</label><input name="lcf_hundred_acre_wood_field" type="text" id="lcf-hundred-acre-wood-field" value="" />';
+	$lcf_form .= '<label for="lcf-hundred-acre-wood-field" id="lcf-hundred-acre-wood-label">' . __( 'For Official Use Only', 'lightweight-contact-form' ) . '</label><input name="lcf_hundred_acre_wood_field" type="text" id="lcf-hundred-acre-wood-field" value="" tabindex="-1" />';
 	// filter to allow insertion of more fields.
 	$lcf_form .= apply_filters( 'lcf_form_fields', '', $url );
 	$lcf_form .= ( '<label for="lcf_message">' . esc_html( $atts['message_label'] ) . '</label>
