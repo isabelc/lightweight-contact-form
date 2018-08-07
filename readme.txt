@@ -3,8 +3,8 @@ Contributors: isabel104
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R7BHLMCQ437SS
 Tags: contact form, lightweight contact form, light contact form, fast contact form, minimalistic
 Requires at least: 4.6
-Tested up to: 5.0-alpha-42606
-Stable tag: 1.5.1
+Tested up to: 5.0-alpha-43556
+Stable tag: 1.5.2
 License: GNU Version 2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,6 +62,9 @@ None yet.
 
 == Changelog ==
 
+= 1.5.2, 2018-08-06 =
+* Tweak - Add back the match captcha box which was previously removed in version 1.5. It is added again because the honeypot field is not working well enough to eliminate spam.
+
 = 1.5.1, 2018-03-07 =
 * Tweak - Added 2 (optional) semi-colons.
 
@@ -101,6 +104,8 @@ None yet.
 * Initial public release.
 
 == Upgrade Notice ==
+= 1.5.2 =
+Add back the match captcha box to better eliminage spam.
 
 = 1.5 =
 Removed the math captcha box in favor of better spam-blocking.
