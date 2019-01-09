@@ -55,29 +55,31 @@ function lcf_input_filter() {
 		return false;
 	}
 
-	// verify Google reCAPTCHA v3
-	if ( empty( $_POST['lcf-grecaptcha-response'] ) ) {
-        return false;
-	} else {
-		$token = sanitize_text_field( $_POST['lcf-grecaptcha-response'] );
-        $key = get_option( 'lcf_recaptcha_v3_secret_key' );
-        $response = wp_remote_post( 'https://www.google.com/recaptcha/api/siteverify', array(
-            'body' => array(
-                'secret'   => $key,
-                'response' => $token,
-                'remoteip' => $_SERVER['REMOTE_ADDR']
-            )
-        ) );
-        $result = json_decode( $response['body'] );
+	// verify Google reCAPTCHA v3 only if keys are set
+	$priv_key = get_option( 'lcf_recaptcha_v3_secret_key' );
+	if ( $priv_key && get_option( 'lcf_recaptcha_v3_site_key' ) ) {
+		if ( empty( $_POST['lcf-grecaptcha-response'] ) ) {
+	        return false;
+		} else {
+			$token = sanitize_text_field( $_POST['lcf-grecaptcha-response'] );
+	        $response = wp_remote_post( 'https://www.google.com/recaptcha/api/siteverify', array(
+	            'body' => array(
+	                'secret'   => $priv_key,
+	                'response' => $token,
+	                'remoteip' => $_SERVER['REMOTE_ADDR']
+	            )
+	        ) );
+	        $result = json_decode( $response['body'] );
 
-		if ( empty($result->success) || ( 'lcf' != $result->action ) ) {
-			return false;
-		}
+			if ( empty($result->success) || ( 'lcf' != $result->action ) ) {
+				return false;
+			}
 
-		if ( $result->score < 0.5 ) {
-			return false;
-		}		
-    }
+			if ( $result->score < 0.5 ) {
+				return false;
+			}		
+	    }
+	}
 
 	global $lcf_strings;
 	$pass  = true;
@@ -123,11 +125,13 @@ function lcf_input_filter() {
  * Add the validation script to the footer on the contact form page.
  */
 function lcf_form_validation() {
+	// only do reCaptcha if keys are set
+	$grecaptcha = '';
 	$site_key = get_option( 'lcf_recaptcha_v3_site_key' );
-	?><script type='text/javascript'>grecaptcha.ready(function() {
-			grecaptcha.execute('<?php echo $site_key; ?>', {action: 'lcf'})
-			.then(function(token) {document.getElementById('lcf-grecaptcha-response').value = token;});});
-	var honey = ['lcf-hundred-acre-wood-field','lcf-hundred-acre-wood-label'];
+	if ( $site_key && get_option( 'lcf_recaptcha_v3_secret_key' ) ) {
+		$grecaptcha = "grecaptcha.ready(function() {grecaptcha.execute('" . $site_key. "', {action: 'lcf'}).then(function(token) {document.getElementById('lcf-grecaptcha-response').value = token;});});";
+	}
+	?><script type='text/javascript'><?php echo $grecaptcha; ?>var honey = ['lcf-hundred-acre-wood-field','lcf-hundred-acre-wood-label'];
 	var len = 2;
 	for (var i = 0; i < len; i++) {
 		document.getElementById(honey[i]).style.position = 'absolute';
@@ -189,8 +193,7 @@ function lcf_form_validation() {
  */
 function lcf_recaptcha_js() {
 	$site_key = get_option( 'lcf_recaptcha_v3_site_key' );
-	$priv_key = get_option( 'lcf_recaptcha_v3_secret_key' );
-	if ( $site_key && $priv_key ) {
+	if ( $site_key && get_option( 'lcf_recaptcha_v3_secret_key' ) ) {
 		?><script src="https://www.google.com/recaptcha/api.js?render=<?php echo $site_key; ?>"></script><?php
 	}
 }
