@@ -3,7 +3,7 @@
 Plugin Name: Lightweight Contact Form
 Plugin URI: https://isabelcastillo.com/lightweight-wordpress-contact-form
 Description: Light, barebones Contact Form shortcode with client-side and server-side validation.
-Version: 2.0-alpha.1
+Version: 2.0-alpha.3
 Author: Isabel Castillo
 Author URI: https://isabelcastillo.com
 Text Domain: lightweight-contact-form
@@ -55,6 +55,30 @@ function lcf_input_filter() {
 		return false;
 	}
 
+	// verify Google reCAPTCHA v3
+	if ( empty( $_POST['lcf-grecaptcha-response'] ) ) {
+        return false;
+	} else {
+		$token = sanitize_text_field( $_POST['lcf-grecaptcha-response'] );
+        $key = get_option( 'lcf_recaptcha_v3_secret_key' );
+        $response = wp_remote_post( 'https://www.google.com/recaptcha/api/siteverify', array(
+            'body' => array(
+                'secret'   => $key,
+                'response' => $token,
+                'remoteip' => $_SERVER['REMOTE_ADDR']
+            )
+        ) );
+        $result = json_decode( $response['body'] );
+
+		if ( empty($result->success) || ( 'lcf' != $result->action ) ) {
+			return false;
+		}
+
+		if ( $result->score < 0.5 ) {
+			return false;
+		}		
+    }
+
 	global $lcf_strings;
 	$pass  = true;
 	$lcf_strings['value_name'] = isset( $_POST['lcf_contactform_name'] ) ? sanitize_text_field( $_POST['lcf_contactform_name'] ) : '';
@@ -99,7 +123,11 @@ function lcf_input_filter() {
  * Add the validation script to the footer on the contact form page.
  */
 function lcf_form_validation() {
-	?><script type='text/javascript'>var honey = ['lcf-hundred-acre-wood-field','lcf-hundred-acre-wood-label'];
+	$site_key = get_option( 'lcf_recaptcha_v3_site_key' );
+	?><script type='text/javascript'>grecaptcha.ready(function() {
+			grecaptcha.execute('<?php echo $site_key; ?>', {action: 'lcf'})
+			.then(function(token) {document.getElementById('lcf-grecaptcha-response').value = token;});});
+	var honey = ['lcf-hundred-acre-wood-field','lcf-hundred-acre-wood-label'];
 	var len = 2;
 	for (var i = 0; i < len; i++) {
 		document.getElementById(honey[i]).style.position = 'absolute';
@@ -156,13 +184,25 @@ function lcf_form_validation() {
 }
 
 /**
+ * Add the reCAPTCHA api.js if site key is set
+ * @since 2.0
+ */
+function lcf_recaptcha_js() {
+	$site_key = get_option( 'lcf_recaptcha_v3_site_key' );
+	$priv_key = get_option( 'lcf_recaptcha_v3_secret_key' );
+	if ( $site_key && $priv_key ) {
+		?><script src="https://www.google.com/recaptcha/api.js?render=<?php echo $site_key; ?>"></script><?php
+	}
+}
+
+/**
  * Shortcode to display contact form
  */
 function lcf_shortcode( $atts ) {
 	$the_atts = shortcode_atts( array(
 		'message_label'	=> __( 'Message', 'lightweight-contact-form' )
 	), $atts, 'lcf_contact_form' );
-
+	add_action( 'wp_footer', 'lcf_recaptcha_js' );
 	if ( lcf_input_filter() ) {
 		return lcf_process_contact_form( $the_atts );
 	} else {
@@ -250,10 +290,64 @@ function lcf_display_contact_form( $atts ) {
 	$lcf_form .= ( '<label for="lcf_message">' . esc_html( $atts['message_label'] ) . '</label>
 				<textarea name="lcf_message" id="lcf_message" minlength="4" cols="33" rows="7" placeholder="' . __( 'Your message', 'lightweight-contact-form' ) . '" class="' . esc_attr( $message_class ) . '" required>'. stripslashes( esc_textarea( $message ) ) .'</textarea>
 				<div class="lcf-submit">
-					<input type="submit" name="Submit" id="lcf_contact" value="' . __( 'Send', 'lightweight-contact-form' ) . '">
+					<input type="hidden" id="lcf-grecaptcha-response" name="lcf-grecaptcha-response">
 					<input type="hidden" name="lcf_key" value="process_form">
+					<input type="submit" name="Submit" id="lcf_contact" value="' . __( 'Send', 'lightweight-contact-form' ) . '">
 				</div>
 			</form>
 		</div>' );
 	return $lcf_form;
+}
+
+add_action( 'admin_init', 'lcf_register_settings' );
+/**
+ * LCF reCAPTCHA settings
+ * @since 2.0
+ */
+function lcf_register_settings() {
+    add_settings_section(
+        'lcf_recaptcha_keys',
+        __( 'Lightweight Contact Form', 'lightweight-contact-form' ),
+        'lcf_setting_description',
+        'discussion'
+    );
+    $settings = array(
+    	'lcf_recaptcha_v3_site_key' => __( 'reCAPTCHA v3 Site key', 'lightweight-contact-form' ),
+    	'lcf_recaptcha_v3_secret_key' => __( 'reCAPTCHA v3 Secret key', 'lightweight-contact-form' )
+    );
+    foreach ( $settings as $id => $title ) {
+	    register_setting(
+	        'discussion',
+	        $id,
+	        'trim'
+	    );
+	    add_settings_field(
+	        $id,
+	        $title,
+	        'lcf_setting_field',
+	        'discussion',
+	        'lcf_recaptcha_keys',
+	        array ( 'label_for' => $id )
+	    );
+	}
+}
+
+/**
+ * Print description text for the field.
+ * @since 2.0
+ */
+function lcf_setting_description() {
+    ?><p class="description"><?php _e( 'To get your reCAPTCHA v3 Site key and Secret key, you need to <a href="http://www.google.com/recaptcha/admin">sign up for an API key pair</a> from Google.', 'lightweight-contact-form' ); ?></p><?php
+}
+
+/**
+ * Setting field callback
+ * @since 2.0
+ */
+function lcf_setting_field( $args ) {
+    printf(
+        '<input type="text" class="regular-text" name="%1$s" value="%2$s" id="%1$s" />',
+        $args['label_for'],
+        esc_attr( get_option( $args['label_for'], '' ) )
+    );
 }
