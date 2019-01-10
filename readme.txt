@@ -3,8 +3,9 @@ Contributors: isabel104
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R7BHLMCQ437SS
 Tags: contact form, lightweight contact form, light contact form, fast contact form, minimalistic
 Requires at least: 4.6
-Tested up to: 5.0.2
-Stable tag: 1.5.2
+Tested up to: 5.0.3
+Stable tag: 2.0
+Requires PHP: 5.6
 License: GNU Version 2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -58,7 +59,9 @@ To try the contact form, visit that page on your site.
 
 == Frequently Asked Questions ==
 
-None yet.
+= How do I stop SPAM on the contact form? =
+
+To stop SPAM on your contact form, get your free [Google reCAPTCHA keys](https://isabelcastillo.com/recaptcha-v3-keys). Then, enter those keys in your WordPress admin settings by going to **Settings** > **Discussion**. On the Discussion Settings page, scroll all the way down to "Lightweight Contact Form" where you'll find the place to enter your **reCAPTCHA v3 Site key** and **reCAPTCHA v3 Secret key**.
 
 == Screenshots ==
 
@@ -66,8 +69,12 @@ None yet.
 
 == Changelog ==
 
+= 2.0, 2019-01-09 =
+* New - Added the ability to use Google reCAPTCHA v3 to stop spam on your contact form. To use this new protection, get your free [Google reCAPTCHA keys](https://isabelcastillo.com/recaptcha-v3-keys). Then, enter those keys in your WordPress admin settings by going to **Settings** > **Discussion**. On the Discussion Settings page, scroll all the way down to "Lightweight Contact Form" where you'll find the place to enter your **reCAPTCHA v3 Site key** and **reCAPTCHA v3 Secret key**.
+* New - Removed the math captcha box, again.
+
 = 1.5.2, 2018-08-06 =
-* Tweak - Add back the match captcha box which was previously removed in version 1.5. It is added again because the honeypot field is not working well enough to eliminate spam.
+* Tweak - Add back the math captcha box which was previously removed in version 1.5. It is added again because the honeypot field is not working well enough to eliminate spam.
 
 = 1.5.1, 2018-03-07 =
 * Tweak - Added 2 (optional) semi-colons.
@@ -108,8 +115,11 @@ None yet.
 * Initial public release.
 
 == Upgrade Notice ==
+= 2.0 =
+Ability to use Google reCAPTCHA v3 to stop spam on your contact form.
+
 = 1.5.2 =
-Add back the match captcha box to better eliminage spam.
+Add back the match captcha box to better eliminate spam.
 
 = 1.5 =
 Removed the math captcha box in favor of better spam-blocking.
