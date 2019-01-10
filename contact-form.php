@@ -340,7 +340,7 @@ function lcf_register_settings() {
  * @since 2.0
  */
 function lcf_setting_description() {
-    ?><p class="description"><?php _e( 'To get your reCAPTCHA v3 Site key and Secret key, you need to <a href="http://www.google.com/recaptcha/admin">sign up for an API key pair</a> from Google.', 'lightweight-contact-form' ); ?></p><?php
+    ?><p class="description"><?php _e( 'To get your reCAPTCHA v3 Site key and Secret key, you need to <a href="http://www.google.com/recaptcha/admin">sign up for a reCAPTCHA API key pair</a> from Google.', 'lightweight-contact-form' ); ?></p><?php
 }
 
 /**

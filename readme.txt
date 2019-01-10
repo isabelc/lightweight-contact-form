@@ -3,24 +3,26 @@ Contributors: isabel104
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R7BHLMCQ437SS
 Tags: contact form, lightweight contact form, light contact form, fast contact form, minimalistic
 Requires at least: 4.6
-Tested up to: 5.0-alpha-43556
+Tested up to: 5.0.2
 Stable tag: 1.5.2
 License: GNU Version 2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The most lightweight Contact Form plugin for WordPress. No CSS files, no settings, no overhead. The goal is fastest page speed.
+The most lightweight Contact Form plugin for WordPress. No CSS files, no overhead, no SPAM. The goal is fastest page speed.
 
 == Description ==
 
-This is the absolute lightest contact form for WordPress. This plugin is designed for the fastest pagespeed. So, there is no settings page, no CSS stylesheet, no extra files, and no overhead.
+This is the absolute lightest contact form for WordPress. This plugin is designed for the fastest pagespeed. So, there is no CSS stylesheet, no extra files, and no overhead. And no spam. It uses Google reCAPTCHA v3 so as not to annoy your users with any extra step, while keeping your contact form spam-free.
 
 If all you need is a simple contact form to take messages from site visitors, and fast page speed is your priority, this minimal plugin is for you.
 
-Although this form is lightweight and simple, it blocks SPAM, and has both client-side and server-side validation. This is a solid and dependable contact form.
+Although this form is lightweight and simple, it blocks SPAM, and has both client-side and server-side validation. This is a solid and dependable contact form. 
+
+**NOTE: To make use of the extra spam protection from Google reCAPTCHA v3, you must [get your reCAPTCHA v3 API keys](https://isabelcastillo.com/recaptcha-v3-keys) from Google. This is a free and easy step, and is strongly recommended.**
 
 **Features**
 
-- No settings. Emails are sent to the admin email which is set in your WordPress General Settings.
+- Emails are sent to the admin email which is set in your WordPress General Settings.
 - Add the contact form to any page with a shortcode.
 - Both JavaScript client-side and PHP server-side validation.
 - It’s just one file. No extra CSS or JavaScript files. This is for the most lightweight footprint.
@@ -45,6 +47,8 @@ Add the contact form to any page with this shortcode:
 `[lcf_contact_form]`
 
 Optionally, add [these CSS styles](https://isabelcastillo.com/lightweight-wordpress-contact-form#jl-css) to align the form fields.
+
+This step is strongly recommended: To stop SPAM on your contact form, get your free [Google reCAPTCHA keys](https://isabelcastillo.com/recaptcha-v3-keys). Then, enter those keys in your WordPress admin settings by going to **Settings** > **Discussion**. On the Discussion Settings page, scroll all the way down to "Lightweight Contact Form" where you'll find the place to enter your **reCAPTCHA v3 Site key** and **reCAPTCHA v3 Secret key**.
 
 That is all. Now you have a lightweight, working contact form on your WordPress site. When someone fills out and submits your contact form, it will be sent to the admin email which is set in your WordPress General Settings.
 
