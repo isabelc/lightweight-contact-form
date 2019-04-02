@@ -3,7 +3,7 @@ Contributors: isabel104
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R7BHLMCQ437SS
 Tags: contact form, lightweight contact form, light contact form, fast contact form, minimalistic
 Requires at least: 4.6
-Tested up to: 5.0.3
+Tested up to: 5.1.1
 Stable tag: 2.0
 Requires PHP: 5.6
 License: GNU Version 2
