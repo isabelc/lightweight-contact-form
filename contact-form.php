@@ -129,9 +129,9 @@ function lcf_form_validation() {
 	$grecaptcha = '';
 	$site_key = get_option( 'lcf_recaptcha_v3_site_key' );
 	if ( $site_key && get_option( 'lcf_recaptcha_v3_secret_key' ) ) {
-		$grecaptcha = "grecaptcha.ready(function() {grecaptcha.execute('" . $site_key. "', {action: 'lcf'}).then(function(token) {document.getElementById('lcf-grecaptcha-response').value = token;});});";
+		$grecaptcha = "grecaptcha.ready(function() {grecaptcha.execute('" . $site_key. "', {action: 'lcf'}).then(function(token) {document.getElementById('lcf-grecaptcha-response').value = token;document.forms['lcf-contactform'].submit();});});";
 	}
-	?><script type='text/javascript'><?php echo $grecaptcha; ?>var honey = ['lcf-hundred-acre-wood-field','lcf-hundred-acre-wood-label'];
+	?><script type='text/javascript'>var honey = ['lcf-hundred-acre-wood-field','lcf-hundred-acre-wood-label'];
 	var len = 2;
 	for (var i = 0; i < len; i++) {
 		document.getElementById(honey[i]).style.position = 'absolute';
@@ -144,7 +144,8 @@ function lcf_form_validation() {
 		document.getElementById(honey[i]).style.padding = '0';
 	}
 	var submitButton = document.getElementById('lcf_contact');
-	submitButton.onclick = function() {
+	submitButton.addEventListener("click",function(e){
+		e.preventDefault();
 		if(document.getElementById('lcf-hundred-acre-wood-field').value) { 
 			return false;
 		}
@@ -176,15 +177,14 @@ function lcf_form_validation() {
 		    }
 		}
 	    if (hasBlank) {scroll(0,0);return false;}
-	};
+	});
 	function lcfErrorLabel(el, fieldname, text ) {
 		var err = document.createElement('label');
 		err.setAttribute('for', fieldname); 
 		err.className = 'error';
 		err.innerText = text;
 		el.parentNode.insertBefore(err, el.nextSibling);
-	}</script>
-<?php 
+	}<?php echo $grecaptcha; ?></script><?php 
 }
 
 /**
